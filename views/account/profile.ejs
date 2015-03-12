@@ -1,0 +1,122 @@
+<h1 class="page-header">Your profile</h1>
+<% include ../partials/flash %>
+<div class="row">
+  <div class="col-sm-8">
+    <form action="/account/profile" method="post" class="form-horizontal">
+      <input type="hidden" name="_csrf" value="<%= _csrf %>">
+      <div class="form-group">
+        <label for="email" class="col-sm-3 control-label">Email</label>
+        <div class="col-sm-6">
+          <input type="email" name="email" id="email" value="<%= user.email %>" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="name" class="col-sm-3 control-label">Name</label>
+        <div class="col-sm-6">
+          <input type="text" name="name" id="name" value="<%= user.profile.name %>" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Gender" class="col-sm-3 control-label">Organization</label>
+        <div class="col-sm-6">
+          <input type="text" name="organization" id="organization" value="<%= user.profile.organization %>" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="location" class="col-sm-3 control-label">Location</label>
+        <div class="col-sm-6">
+          <input type="text" name="location" id="location" value="<%= user.profile.location %>" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="website" class="col-sm-3 control-label">Website</label>
+        <div class="col-sm-6">
+          <input type="text" name="website" id="website" value="<%= user.profile.website %>" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="gravatar" class="col-sm-3 control-label">Profile image</label>
+        <div class="col-sm-6">
+          <img src="<%= user.gravatar(50) %>" width="50" height="50" class=" img-rounded">
+          &nbsp; Change your profile image at <a target="_blank" href="http://gravatar.com"><i class="fa fa-lg fa-external-link"></i> gravatar.com</a>
+          </p>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+          <button type="submit" class="btn btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </form>
+    <div class="page-header">
+      <h3>
+        Change your password
+      </h3>
+    </div>
+    <form action="/account/password" method="post" class="form-horizontal">
+      <input type="hidden" name="_csrf" value="<%= _csrf %>">
+      <div class="form-group">
+        <label for="password" class="col-sm-3 control-label">New password</label>
+        <div class="col-sm-4">
+          <input type="password" name="password" id="password" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword" class="col-sm-3 control-label">Confirm password</label>
+        <div class="col-sm-4">
+          <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-4">
+          <button type="submit" class="btn btn btn-primary">Change password</button>
+        </div>
+      </div>
+    </form>
+    <div class="page-header">
+      <h3>
+        Delete your account
+      </h3>
+    </div>
+    <p>
+      You can delete your account at any time, but this action is irreversible.
+    </p>
+    <form action="/account/delete" method="post">
+      <input type="hidden" name="_csrf" value="<%= _csrf %>">
+      <button type="submit" class="btn btn-danger"><i class="fa fa-lg fa-trash"></i> Delete my account</button>
+    </form>
+    <br/>
+  </div>
+  <div class="col-sm-4">
+    <h2>Link accounts</h2>
+    <p class="lead">Linking accounts allows you to log in more easily and allows to you to log in if you lose access to your email account.</p>
+    <p>
+      <% if (user.facebook) { %>
+        <a href="/account/unlink/facebook" class="btn btn-block btn-danger"><i class="fa fa-lg fa-fw fa-facebook"></i> Unlink your Facebook account</a>
+      <% } else { %>
+        <a href="/auth/facebook" class="btn btn-block btn-default"><i class="fa fa-lg fa-fw fa-facebook"></i> Link to your Facebook account</a>
+      <% } %>
+    </p>
+    <p>
+      <% if (user.google) { %>
+        <a href="/account/unlink/google" class="btn btn-block btn-danger"><i class="fa fa-lg fa-fw fa-google"></i> Unlink your Google account</a>
+      <% } else { %>
+        <a href="/auth/google" class="btn btn-block btn-default"><i class="fa fa-lg fa-fw fa-google"></i> Link to your Google account</a>
+      <% } %>
+    </p>
+    <p>
+      <% if (user.twitter) { %>
+        <a href="/account/unlink/twitter" class="btn btn-block btn-danger"><i class="fa fa-lg fa-fw fa-twitter"></i> Unlink your Twitter account</a>
+      <% } else { %>
+        <a href="/auth/twitter" class="btn btn-block btn-default"><i class="fa fa-lg fa-fw fa-twitter"></i> Link to your Twitter account</a>
+      <% } %>
+    </p>
+    <p>
+      <% if (user.github) { %>
+        <a href="/account/unlink/github" class="btn btn-block btn-danger"><i class="fa fa-lg fa-fw fa-github"></i> Unlink your GitHub account</a>
+      <% } else { %>
+        <a href="/auth/github" class="btn btn-block btn-default"><i class="fa fa-lg fa-fw fa-github"></i> Link to your GitHub account</a>
+      <% } %>
+    </p>
+  </div>
+</div>

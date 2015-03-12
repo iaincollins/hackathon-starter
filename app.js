@@ -11,7 +11,6 @@ var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var csrf = require('lusca').csrf();
 var methodOverride = require('method-override');
-
 var _ = require('lodash');
 var MongoStore = require('connect-mongo')({ session: session });
 var flash = require('express-flash');
@@ -20,55 +19,42 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
-
-/**
- * Controllers (route handlers).
- */
-
-var homeController = require('./controllers/home');
-var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
-var contactController = require('./controllers/contact');
+var ejs = require('ejs');
+var partials = require('express-partials');
+var app = express();
 
 /**
  * API keys and Passport configuration.
  */
-
-var secrets = require('./config/secrets');
-var passportConf = require('./config/passport');
-
-/**
- * Create Express server.
- */
-
-var app = express();
+var config = {
+  app: require('./config/app'),
+  secrets: require('./config/secrets'),
+  passport: require('./config/passport'),
+  secrets: require('./config/secrets')
+};
 
 /**
  * Connect to MongoDB.
  */
-
-mongoose.connect(secrets.db);
+mongoose.connect(config.secrets.db);
 mongoose.connection.on('error', function() {
   console.error('MongoDB Connection Error. Make sure MongoDB is running.');
 });
 
-var hour = 3600000;
-var day = hour * 24;
-var week = day * 7;
-
 /**
  * CSRF whitelist.
  */
-
-var csrfExclude = ['/url1', '/url2'];
+var csrfExclude = [];
 
 /**
  * Express configuration.
  */
-
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
+app.engine('ejs', ejs.__express);
+partials.register('.ejs', ejs);
+app.use(partials());
 app.use(compress());
 app.use(connectAssets({
   paths: [path.join(__dirname, 'public/css'), path.join(__dirname, 'public/js')],
@@ -83,9 +69,9 @@ app.use(cookieParser());
 app.use(session({
   resave: true,
   saveUninitialized: true,
-  secret: secrets.sessionSecret,
+  secret: config.secrets.sessionSecret,
   store: new MongoStore({
-    url: secrets.db,
+    url: config.secrets.db,
     auto_reconnect: true
   })
 }));
@@ -98,7 +84,11 @@ app.use(function(req, res, next) {
   csrf(req, res, next);
 });
 app.use(function(req, res, next) {
-  // Make user object available in templates.
+
+  res.locals.siteName = config.app.name;
+  res.locals.title = config.app.name;
+
+  // Make user object available in templates.  
   res.locals.user = req.user;
   next();
 });
@@ -111,66 +101,63 @@ app.use(function(req, res, next) {
   req.session.returnTo = req.path;
   next();
 });
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: week }));
+
+var hour = 3600000;
+var day = hour * 24;
+var week = day * 7;
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: week * 4 }));
+
+/**
+ * Route handlers
+ */
+var routes = {
+  home: require('./routes/home'),
+  about: require('./routes/about'),
+  contact : require('./routes/contact'),
+  user: require('./routes/user')
+};
+
+app.use(function(req, res, next) {
+  // Open up calls to cross site origin requests
+  // res.setHeader("Access-Control-Allow-Origin", "*");
+  // Specify which headers and methods can be set by the client
+  // Explicitly required for compatiblity with many browser based REST clients
+  // res.setHeader("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,Session-Id,Api-Key");
+  // res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS,PUT,DELETE");
+  
+  if (req.method == "OPTIONS") {
+      // Return immediately for all OPTIONS requests
+      res.send();
+  } else {
+      next();    
+  }
+});
 
 /**
  * Main routes.
  */
-
-app.get('/', homeController.index);
-app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
-app.get('/logout', userController.logout);
-app.get('/forgot', userController.getForgot);
-app.post('/forgot', userController.postForgot);
-app.get('/reset/:token', userController.getReset);
-app.post('/reset/:token', userController.postReset);
-app.get('/signup', userController.getSignup);
-app.post('/signup', userController.postSignup);
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
-app.get('/account', passportConf.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
-app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
-app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
-app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
-
-/**
- * API examples routes.
- */
-
-app.get('/api', apiController.getApi);
-app.get('/api/lastfm', apiController.getLastfm);
-app.get('/api/nyt', apiController.getNewYorkTimes);
-app.get('/api/aviary', apiController.getAviary);
-app.get('/api/steam', apiController.getSteam);
-app.get('/api/stripe', apiController.getStripe);
-app.post('/api/stripe', apiController.postStripe);
-app.get('/api/scraping', apiController.getScraping);
-app.get('/api/twilio', apiController.getTwilio);
-app.post('/api/twilio', apiController.postTwilio);
-app.get('/api/clockwork', apiController.getClockwork);
-app.post('/api/clockwork', apiController.postClockwork);
-app.get('/api/foursquare', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFoursquare);
-app.get('/api/tumblr', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTumblr);
-app.get('/api/facebook', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getFacebook);
-app.get('/api/github', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getGithub);
-app.get('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getTwitter);
-app.post('/api/twitter', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postTwitter);
-app.get('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getVenmo);
-app.post('/api/venmo', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.postVenmo);
-app.get('/api/linkedin', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getLinkedin);
-app.get('/api/instagram', passportConf.isAuthenticated, passportConf.isAuthorized, apiController.getInstagram);
-app.get('/api/yahoo', apiController.getYahoo);
+app.get('/', routes.home.index);
+app.get('/about', routes.about.index);
+app.get('/login', routes.user.getLogin);
+app.post('/login', routes.user.postLogin);
+app.get('/logout', routes.user.logout);
+app.get('/reset', routes.user.getReset);
+app.post('/reset', routes.user.postReset);
+app.get('/change-password/:token', routes.user.getChangePassword);
+app.post('/change-password/:token', routes.user.postChangePassword);
+app.get('/signup', routes.user.getSignup);
+app.post('/signup', routes.user.postSignup);
+app.get('/contact', routes.contact.getContact);
+app.post('/contact', routes.contact.postContact);
+app.get('/account', config.passport.isAuthenticated, routes.user.getAccount);
+app.post('/account/profile', config.passport.isAuthenticated, routes.user.postUpdateProfile);
+app.post('/account/password', config.passport.isAuthenticated, routes.user.postUpdatePassword);
+app.post('/account/delete', config.passport.isAuthenticated, routes.user.postDeleteAccount);
+app.get('/account/unlink/:provider', config.passport.isAuthenticated, routes.user.getOauthUnlink);
 
 /**
  * OAuth sign-in routes.
  */
-
-app.get('/auth/instagram', passport.authenticate('instagram'));
-app.get('/auth/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
@@ -187,38 +174,15 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), function(req, res) {
   res.redirect(req.session.returnTo || '/');
 });
-app.get('/auth/linkedin', passport.authenticate('linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
-});
-
-/**
- * OAuth authorization routes for API examples.
- */
-
-app.get('/auth/foursquare', passport.authorize('foursquare'));
-app.get('/auth/foursquare/callback', passport.authorize('foursquare', { failureRedirect: '/api' }), function(req, res) {
-  res.redirect('/api/foursquare');
-});
-app.get('/auth/tumblr', passport.authorize('tumblr'));
-app.get('/auth/tumblr/callback', passport.authorize('tumblr', { failureRedirect: '/api' }), function(req, res) {
-  res.redirect('/api/tumblr');
-});
-app.get('/auth/venmo', passport.authorize('venmo', { scope: 'make_payments access_profile access_balance access_email access_phone' }));
-app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '/api' }), function(req, res) {
-  res.redirect('/api/venmo');
-});
 
 /**
  * 500 Error Handler.
  */
-
 app.use(errorHandler());
 
 /**
  * Start Express server.
  */
-
 app.listen(app.get('port'), function() {
   console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
 });

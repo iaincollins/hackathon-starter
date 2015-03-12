@@ -10,16 +10,13 @@ var userSchema = new mongoose.Schema({
   twitter: String,
   google: String,
   github: String,
-  instagram: String,
-  linkedin: String,
   tokens: Array,
 
   profile: {
     name: { type: String, default: '' },
-    gender: { type: String, default: '' },
+    organization: { type: String, default: '' },
     location: { type: String, default: '' },
-    website: { type: String, default: '' },
-    picture: { type: String, default: '' }
+    website: { type: String, default: '' }
   },
 
   resetPasswordToken: String,
