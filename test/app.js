@@ -25,10 +25,10 @@ describe('GET /signup', function() {
   });
 });
 
-describe('GET /api', function() {
+describe('GET /reset', function() {
   it('should return 200 OK', function(done) {
     request(app)
-      .get('/api')
+      .get('/reset')
       .expect(200, done);
   });
 });
@@ -44,7 +44,7 @@ describe('GET /contact', function() {
 describe('GET /random-url', function() {
   it('should return 404', function(done) {
     request(app)
-      .get('/reset')
+      .get('/random-url')
       .expect(404, done);
   });
 });
