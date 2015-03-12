@@ -1,4 +1,4 @@
 module.exports = {
-  name: "Site name",
+  name: "BBC News Labs Prototyping Kit",
   email: "feedback@example.com"
 };
