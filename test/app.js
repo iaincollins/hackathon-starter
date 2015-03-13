@@ -25,7 +25,7 @@ describe('GET /signup', function() {
   });
 });
 
-describe('GET /reset', function() {
+describe('GET /reset-password', function() {
   it('should return 200 OK', function(done) {
     request(app)
       .get('/reset')
