@@ -6,11 +6,14 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var GitHubStrategy = require('passport-github').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../models/User');
-var secrets = require('./secrets');
+var config = {
+  secrets: require('../config/secrets')
+};
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
+
 
 passport.deserializeUser(function(id, done) {
   User.findById(id, function(err, user) {
@@ -48,7 +51,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
  */
 
 // Sign in with Facebook.
-passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, refreshToken, profile, done) {
+passport.use(new FacebookStrategy(config.secrets.facebook, function(req, accessToken, refreshToken, profile, done) {
   if (req.user) {
     User.findOne({ facebook: profile.id }, function(err, existingUser) {
       if (existingUser) {
@@ -94,7 +97,7 @@ passport.use(new FacebookStrategy(secrets.facebook, function(req, accessToken, r
 }));
 
 // Sign in with GitHub.
-passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refreshToken, profile, done) {
+passport.use(new GitHubStrategy(config.secrets.github, function(req, accessToken, refreshToken, profile, done) {
   if (req.user) {
     User.findOne({ github: profile.id }, function(err, existingUser) {
       if (existingUser) {
@@ -141,7 +144,7 @@ passport.use(new GitHubStrategy(secrets.github, function(req, accessToken, refre
 }));
 
 // Sign in with Twitter.
-passport.use(new TwitterStrategy(secrets.twitter, function(req, accessToken, tokenSecret, profile, done) {
+passport.use(new TwitterStrategy(config.secrets.twitter, function(req, accessToken, tokenSecret, profile, done) {
   if (req.user) {
     User.findOne({ twitter: profile.id }, function(err, existingUser) {
       if (existingUser) {
@@ -183,7 +186,7 @@ passport.use(new TwitterStrategy(secrets.twitter, function(req, accessToken, tok
 }));
 
 // Sign in with Google.
-passport.use(new GoogleStrategy(secrets.google, function(req, accessToken, refreshToken, profile, done) {
+passport.use(new GoogleStrategy(config.secrets.google, function(req, accessToken, refreshToken, profile, done) {
   if (req.user) {
     User.findOne({ google: profile.id }, function(err, existingUser) {
       if (existingUser) {
