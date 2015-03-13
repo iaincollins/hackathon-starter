@@ -22,6 +22,8 @@
     <div class="container">
     <%- body %>
     </div>
-    <div class="footer"></div>
+    <% if (!user) { %>
+      <% include partials/sign-in-dialogs %>
+    <% } %>
   </body>
 </html>
