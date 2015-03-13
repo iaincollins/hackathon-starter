@@ -29,7 +29,6 @@ var app = express();
 var config = {
   app: require('./config/app'),
   secrets: require('./config/secrets'),
-  passport: require('./config/passport'),
   secrets: require('./config/secrets')
 };
 
@@ -114,7 +113,8 @@ var routes = {
   home: require('./routes/home'),
   about: require('./routes/about'),
   contact : require('./routes/contact'),
-  user: require('./routes/user')
+  user: require('./routes/user'),
+  passport: require('./routes/passport')
 };
 
 app.use(function(req, res, next) {
@@ -141,19 +141,19 @@ app.get('/about', routes.about.index);
 app.get('/login', routes.user.getLogin);
 app.post('/login', routes.user.postLogin);
 app.get('/logout', routes.user.logout);
-app.get('/reset', routes.user.getReset);
-app.post('/reset', routes.user.postReset);
+app.get('/reset-password', routes.user.getResetPassword);
+app.post('/reset-password', routes.user.postResetPassword);
 app.get('/change-password/:token', routes.user.getChangePassword);
 app.post('/change-password/:token', routes.user.postChangePassword);
 app.get('/signup', routes.user.getSignup);
 app.post('/signup', routes.user.postSignup);
 app.get('/contact', routes.contact.getContact);
 app.post('/contact', routes.contact.postContact);
-app.get('/account', config.passport.isAuthenticated, routes.user.getAccount);
-app.post('/account/profile', config.passport.isAuthenticated, routes.user.postUpdateProfile);
-app.post('/account/password', config.passport.isAuthenticated, routes.user.postUpdatePassword);
-app.post('/account/delete', config.passport.isAuthenticated, routes.user.postDeleteAccount);
-app.get('/account/unlink/:provider', config.passport.isAuthenticated, routes.user.getOauthUnlink);
+app.get('/account', routes.passport.isAuthenticated, routes.user.getAccount);
+app.post('/account/profile', routes.passport.isAuthenticated, routes.user.postUpdateProfile);
+app.post('/account/password', routes.passport.isAuthenticated, routes.user.postUpdatePassword);
+app.post('/account/delete', routes.passport.isAuthenticated, routes.user.postDeleteAccount);
+app.get('/account/unlink/:provider', routes.passport.isAuthenticated, routes.user.getOauthUnlink);
 
 /**
  * OAuth sign-in routes.

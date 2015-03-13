@@ -207,7 +207,7 @@ exports.getOauthUnlink = function(req, res, next) {
 };
 
 /**
- * GET /reset/:token
+ * GET /change-password/:token
  * Reset Password page.
  */
 
@@ -221,14 +221,14 @@ exports.getChangePassword = function(req, res) {
     .exec(function(err, user) {
       if (!user) {
         req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
-        return res.redirect('/reset');
+        return res.redirect('/reset-password');
       }
       res.render('account/change-password', { title: res.locals.title + " - Change password" });
     });
 };
 
 /**
- * POST /reset/:token
+ * POST /change-password/:token
  * Process the reset password request.
  * @param token
  */
@@ -294,31 +294,31 @@ exports.postChangePassword = function(req, res, next) {
 };
 
 /**
- * GET /reset
+ * GET /reset-password
  * Forgot Password page.
  */
 
-exports.getReset = function(req, res) {
+exports.getResetPassword = function(req, res) {
   if (req.isAuthenticated()) {
     return res.redirect('/');
   }
-  res.render('account/reset', { title: res.locals.title + " - Password reset" });
+  res.render('account/reset-password', { title: res.locals.title + " - Password reset" });
 };
 
 /**
- * POST /reset
+ * POST /reset-password
  * Create a random token, then the send user an email with a reset link.
  * @param email
  */
 
-exports.postReset = function(req, res, next) {
+exports.postResetPassword = function(req, res, next) {
   req.assert('email', 'Please enter a valid email address.').isEmail();
 
   var errors = req.validationErrors();
 
   if (errors) {
     req.flash('errors', errors);
-    return res.redirect('/reset');
+    return res.redirect('/reset-password');
   }
 
   async.waterfall([
@@ -332,7 +332,7 @@ exports.postReset = function(req, res, next) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
           req.flash('errors', { msg: 'No account with that email address exists.' });
-          return res.redirect('/reset');
+          return res.redirect('/reset-password');
         }
 
         user.resetPasswordToken = token;
@@ -367,6 +367,6 @@ exports.postReset = function(req, res, next) {
     }
   ], function(err) {
     if (err) return next(err);
-    res.redirect('/reset');
+    res.redirect('/reset-password');
   });
 };
