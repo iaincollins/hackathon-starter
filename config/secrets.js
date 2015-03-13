@@ -20,6 +20,13 @@ module.exports = {
 
   db: process.env.MONGODB|| 'mongodb://localhost:27017/test',
 
+  bbc: {
+    juicer: {
+      host: "http://data.test.bbc.co.uk/bbcrd-juicer/",
+      key: ""
+    }
+  },
+  
   sessionSecret: process.env.SESSION_SECRET || 'abc',
 
   sendgrid: {

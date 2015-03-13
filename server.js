@@ -114,7 +114,8 @@ var routes = {
   about: require('./routes/about'),
   contact : require('./routes/contact'),
   user: require('./routes/user'),
-  passport: require('./routes/passport')
+  passport: require('./routes/passport'),
+  api: require('./routes/api')
 };
 
 app.use(function(req, res, next) {
@@ -154,6 +155,8 @@ app.post('/account/profile', routes.passport.isAuthenticated, routes.user.postUp
 app.post('/account/password', routes.passport.isAuthenticated, routes.user.postUpdatePassword);
 app.post('/account/delete', routes.passport.isAuthenticated, routes.user.postDeleteAccount);
 app.get('/account/unlink/:provider', routes.passport.isAuthenticated, routes.user.getOauthUnlink);
+app.get('/api', routes.api.index);
+app.get('/api/juicer', routes.api.getJuicer);
 
 /**
  * OAuth sign-in routes.

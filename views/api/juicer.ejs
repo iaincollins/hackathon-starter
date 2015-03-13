@@ -1,0 +1,13 @@
+<h1 class="page-header">Juicer API</h1>
+<div class="row">
+  <div class="col-sm-12">
+    <h2>Recent articles</h2>
+    <br/>
+    <% articles.forEach(function(article) { %>
+      <p class="lead">
+        <strong><i class="fa fa-fw fa-file-text-o"></i> <a href="<%= article.url %>"><%= article.title %></a></strong>
+        <span class="text-muted">via <%= article.source['source-name'] %></span>
+      </p>
+    <% }); %>
+  </div>
+</div>
