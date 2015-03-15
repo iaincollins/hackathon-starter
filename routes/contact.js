@@ -36,8 +36,12 @@ exports.postContact = function(req, res) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/contact');
+    if (req.headers['x-validate']) {
+      return res.json({ errors: errors });
+    } else {
+      req.flash('errors', errors);
+      return res.render('contact');
+    }
   }
 
   var from = req.body.email;
@@ -56,9 +60,9 @@ exports.postContact = function(req, res) {
   transporter.sendMail(mailOptions, function(err) {
     if (err) {
       req.flash('errors', { msg: err.message });
-      return res.redirect('/contact');
+      return res.render('/contact');
     }
     req.flash('success', { msg: 'Message sent successfully!' });
-    res.redirect('/contact');
+    res.render('contact');
   });
 };

@@ -62,7 +62,7 @@ passport.use(new FacebookStrategy(config.secrets.facebook, function(req, accessT
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken: accessToken });
           user.profile.name = user.profile.name || profile.displayName;
-          user.profile.gender = user.profile.gender || profile._json.gender;
+          user.profile.organization = user.profile.organization || profile._json.organization;
           user.profile.picture = user.profile.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.save(function(err) {
             req.flash('info', { msg: 'Your Facebook account has been linked.' });
@@ -84,7 +84,7 @@ passport.use(new FacebookStrategy(config.secrets.facebook, function(req, accessT
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken: accessToken });
           user.profile.name = profile.displayName;
-          user.profile.gender = profile._json.gender;
+          user.profile.organization = profile._json.organization;
           user.profile.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
           user.profile.location = (profile._json.location) ? profile._json.location.name : '';
           user.save(function(err) {
@@ -197,7 +197,7 @@ passport.use(new GoogleStrategy(config.secrets.google, function(req, accessToken
           user.google = profile.id;
           user.tokens.push({ kind: 'google', accessToken: accessToken });
           user.profile.name = user.profile.name || profile.displayName;
-          user.profile.gender = user.profile.gender || profile._json.gender;
+          user.profile.organization = user.profile.organization || profile._json.organization;
           user.profile.picture = user.profile.picture || profile._json.picture;
           user.save(function(err) {
             req.flash('info', { msg: 'Your Google account has been linked.' });
@@ -219,7 +219,7 @@ passport.use(new GoogleStrategy(config.secrets.google, function(req, accessToken
           user.google = profile.id;
           user.tokens.push({ kind: 'google', accessToken: accessToken });
           user.profile.name = profile.displayName;
-          user.profile.gender = profile._json.gender;
+          user.profile.organization = profile._json.organization;
           user.profile.picture = profile._json.picture;
           user.save(function(err) {
             done(err, user);

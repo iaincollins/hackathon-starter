@@ -13,7 +13,7 @@
   <div class="col-sm-6">
     <h3>Sign up via email</h3>
     <br/>
-    <form id="signup-form" method="post" name="signup-form">
+    <form name="signup" method="post" action="/signup" data-validator="true">
       <input type="hidden" name="_csrf" value="<%= _csrf %>">
       <div class="form-group">
         <label for="email" class="control-label">Email</label>

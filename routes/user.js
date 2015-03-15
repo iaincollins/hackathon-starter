@@ -31,15 +31,23 @@ exports.postLogin = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/login');
+    if (req.headers['x-validate']) {
+      return res.json({ errors: errors });
+    } else {
+      req.flash('errors', errors);
+      return res.render('account/login');
+    }
   }
-
+  
   passport.authenticate('local', function(err, user, info) {
     if (err) return next(err);
     if (!user) {
-      req.flash('errors', { msg: info.message });
-      return res.redirect('/login');
+      if (req.headers['x-validate']) {
+        return res.json({ errors: [ { param: 'email', msg: ''}, { param: 'password', msg: '' } ] });
+      } else {
+        req.flash('errors', { msg: info.message });
+        return res.redirect('/login');
+      }
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
@@ -65,7 +73,7 @@ exports.logout = function(req, res) {
  */
 
 exports.getSignup = function(req, res) {
-  if (req.user) return res.redirect('/');
+  if (req.user) return res.redirect('/account');
   res.render('account/signup', { title: res.locals.title + " - Sign up" });
 };
 
@@ -77,27 +85,42 @@ exports.getSignup = function(req, res) {
  */
 
 exports.postSignup = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
+  if (req.user) return res.redirect('/account');
+  
+  req.assert('email', 'Email address is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/signup');
+    if (req.headers['x-validate']) {
+      return res.json({ errors: errors });
+    } else {
+      req.flash('errors', errors);
+      return res.render('account/signup');
+    }
   }
 
+  // If user does not exist, create account
   var user = new User({
     email: req.body.email,
     password: req.body.password
   });
 
   User.findOne({ email: req.body.email }, function(err, existingUser) {
+    
+    // Check if user exists already
     if (existingUser) {
-      req.flash('errors', { msg: 'An account with that email address already exists.' });
-      return res.redirect('/signup');
+      var msg = 'An account with that email address already exists.';
+      if (req.headers['x-validate']) {
+        return res.json({ errors: [ { param: 'email', msg: msg } ] });
+      } else {
+        req.flash('errors', { param: 'email', msg: msg });
+        return res.render('account/signup');
+      }
     }
+    
     user.save(function(err) {
       if (err) return next(err);
       req.logIn(user, function(err) {
@@ -105,6 +128,7 @@ exports.postSignup = function(req, res, next) {
         res.redirect('/');
       });
     });
+    
   });
 };
 

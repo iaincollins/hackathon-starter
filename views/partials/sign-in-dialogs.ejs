@@ -18,7 +18,7 @@
             <div class="col-sm-6">
               <h4>Log in via email</h4>
               <br/>
-              <form method="post" action="/login">
+              <form name="login" method="post" action="/login" data-validator="true">
                 <input type="hidden" name="_csrf" value="<%= _csrf %>">
                 <div class="form-group">
                   <label for="email" class="control-label">Email</label><input type="text" name="email" id="email" placeholder="Email" autofocus="" class="form-control">
@@ -60,7 +60,7 @@
           <div class="col-sm-6">
             <h4>Sign up via email</h4>
             <br/>
-            <form id="signup-form" method="post" action="/signup" name="signup-form">
+            <form name="signup" method="post" action="/signup" data-validator="true">
               <input type="hidden" name="_csrf" value="<%= _csrf %>">
               <div class="form-group">
                 <label for="email" class="control-label">Email</label>
