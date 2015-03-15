@@ -8,7 +8,6 @@ var compress = require('compression');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
-var errorHandler = require('errorhandler');
 var csrf = require('lusca').csrf();
 var methodOverride = require('method-override');
 var _ = require('lodash');
@@ -178,7 +177,24 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedi
 /**
  * 500 Error Handler.
  */
-app.use(errorHandler());
+app.use(function (err, req, res, next) {
+  // treat as 404
+  if (err.message
+    && (~err.message.indexOf('not found')
+    || (~err.message.indexOf('Cast to ObjectId failed')))) {
+    return next();
+  }
+  console.error(err.stack);
+  res.status(500).render('500', { error: err.stack });
+});
+
+/**
+ * 404 File Not Found Handler.
+ */
+app.use(function (req, res, next) {
+  res.status(404).render('404', { url: req.originalUrl });
+});
+  
 
 /**
  * Start Express server.

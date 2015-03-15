@@ -112,7 +112,6 @@ exports.postSignup = function(req, res, next) {
  * GET /account
  * Profile page.
  */
-
 exports.getAccount = function(req, res) {
   res.render('account/profile', { title: res.locals.title + " - Your profile" });
 };
@@ -121,7 +120,6 @@ exports.getAccount = function(req, res) {
  * POST /account/profile
  * Update profile information.
  */
-
 exports.postUpdateProfile = function(req, res, next) {
   User.findById(req.user.id, function(err, user) {
     if (err) return next(err);
@@ -144,7 +142,6 @@ exports.postUpdateProfile = function(req, res, next) {
  * Update current password.
  * @param password
  */
-
 exports.postUpdatePassword = function(req, res, next) {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -173,7 +170,6 @@ exports.postUpdatePassword = function(req, res, next) {
  * POST /account/delete
  * Delete user account.
  */
-
 exports.postDeleteAccount = function(req, res, next) {
   User.remove({ _id: req.user.id }, function(err) {
     if (err) return next(err);
@@ -188,7 +184,6 @@ exports.postDeleteAccount = function(req, res, next) {
  * Unlink OAuth provider.
  * @param provider
  */
-
 exports.getOauthUnlink = function(req, res, next) {
   var provider = req.params.provider;
   User.findById(req.user.id, function(err, user) {
@@ -210,7 +205,6 @@ exports.getOauthUnlink = function(req, res, next) {
  * GET /change-password/:token
  * Reset Password page.
  */
-
 exports.getChangePassword = function(req, res) {
   if (req.isAuthenticated()) {
     return res.redirect('/');
@@ -232,7 +226,6 @@ exports.getChangePassword = function(req, res) {
  * Process the reset password request.
  * @param token
  */
-
 exports.postChangePassword = function(req, res, next) {
   req.assert('password', 'Password must be at least 4 characters long.').len(4);
   req.assert('confirm', 'Passwords must match.').equals(req.body.password);
@@ -297,7 +290,6 @@ exports.postChangePassword = function(req, res, next) {
  * GET /reset-password
  * Forgot Password page.
  */
-
 exports.getResetPassword = function(req, res) {
   if (req.isAuthenticated()) {
     return res.redirect('/');
@@ -310,7 +302,6 @@ exports.getResetPassword = function(req, res) {
  * Create a random token, then the send user an email with a reset link.
  * @param email
  */
-
 exports.postResetPassword = function(req, res, next) {
   req.assert('email', 'Please enter a valid email address.').isEmail();
 
