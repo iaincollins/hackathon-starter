@@ -43,7 +43,7 @@ exports.postLogin = function(req, res, next) {
     if (err) return next(err);
     if (!user) {
       if (req.headers['x-validate']) {
-        return res.json({ errors: [ { param: 'email', msg: ''}, { param: 'password', msg: '' } ] });
+        return res.json({ errors: [ { param: 'email', msg: 'Email or password invalid'}, { param: 'password', msg: '' } ] });
       } else {
         req.flash('errors', { msg: info.message });
         return res.redirect('/login');

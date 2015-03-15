@@ -4,6 +4,7 @@
 <p class="lead">Thanks for getting in touch.</p>
 <% } else { %>
 <form role="form" method="POST" class="form-horizontal" data-validator="true">
+  <div class="messages"></div>
   <input type="hidden" name="_csrf" value="<%= _csrf %>">
   <div class="form-group">
     <label for="name" class="col-sm-2 control-label">Name</label>
