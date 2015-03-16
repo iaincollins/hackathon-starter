@@ -145,6 +145,19 @@ exports.getAccount = function(req, res) {
  * Update profile information.
  */
 exports.postUpdateProfile = function(req, res, next) {
+  req.assert('email', 'Email address is not valid').isEmail();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    if (req.headers['x-validate']) {
+      return res.json({ errors: errors });
+    } else {
+      req.flash('errors', errors);
+      return res.render('account/profile');
+    }
+  }
+  
   User.findById(req.user.id, function(err, user) {
     if (err) return next(err);
     user.email = req.body.email || '';
@@ -154,9 +167,25 @@ exports.postUpdateProfile = function(req, res, next) {
     user.profile.website = req.body.website || '';
 
     user.save(function(err) {
-      if (err) return next(err);
+      
+      // Check for duplicates
+      if (err) {
+        if (err.code == '11000') {
+          var msg = 'An account with that email address already exists.';
+          if (req.headers['x-validate']) {
+            return res.json({ errors: [ { param: 'email', msg: msg } ] });
+          } else {
+            req.flash('errors', { param: 'email', msg: msg });
+            return res.render('account/signup');
+          }
+        } else {
+          // Other errors
+          if (err) return next(err);
+        }
+      } 
+      
       req.flash('success', { msg: 'Your profile information has been updated.' });
-      res.redirect('/account');
+      res.redirect('/profile');
     });
   });
 };
@@ -173,8 +202,12 @@ exports.postUpdatePassword = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/account');
+    if (req.headers['x-validate']) {
+      return res.json({ errors: errors });
+    } else {
+      req.flash('errors', errors);
+      return res.render('account');
+    }
   }
 
   User.findById(req.user.id, function(err, user) {
@@ -297,7 +330,8 @@ exports.postChangePassword = function(req, res, next) {
         from: config.app.email,
         subject: config.app.name+' - Your password has been changed',
         text: 'Hello,\n\n' +
-          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+              'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n' +
+              '\n\n-- \n'
       };
       transporter.sendMail(mailOptions, function(err) {
         req.flash('success', { msg: 'Success! Your password has been changed.' });
@@ -369,11 +403,12 @@ exports.postResetPassword = function(req, res, next) {
       var mailOptions = {
         to: user.email,
         from: config.app.email,
-        subject: config.app.name+ ' - Reset password request',
+        subject: config.app.name+ ' - Password reset',
         text: 'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/change-password/' + token + '\n\n' +
-          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+              'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+              'http://' + req.headers.host + '/change-password/' + token + '\n\n' +
+              'If you did not request this, please ignore this email and your password will remain unchanged.\n' +
+              '\n\n-- \n'
       };
       transporter.sendMail(mailOptions, function(err) {
         req.flash('info', { msg: 'An e-mail has been sent to ' + user.email + ' with further instructions.' });
