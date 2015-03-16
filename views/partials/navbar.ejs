@@ -16,13 +16,13 @@
         <li><a href="/contact"><i class="fa fa-lg fa-fw fa-phone"></i> Contact</a></li>
         <% if (user) { %>
         <li class="dropdown">
-          <a href="/account" data-toggle="dropdown" class="dropdown-toggle">
+          <a href="/profile" data-toggle="dropdown" class="dropdown-toggle">
             <img src="<%= user.profile.picture || user.gravatar(30) %>" alt="Avatar" style="height: 30px; width: 30px; margin: -15px 5px;"  />
             <%= user.profile.name || user.email || user.id %>
             <i class="fa fa-fw fa-caret-down"></i>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="/account"><span class="fa fa-lg fa-fw fa-user"></span> My Account</a></li>
+            <li><a href="/profile"><span class="fa fa-lg fa-fw fa-user"></span> Profile</a></li>
             <li class="divider"></li><li><a href="/logout"><span class="fa fa-lg fa-fw fa-sign-out"></span> Logout</a></li>
           </ul>
         </li>

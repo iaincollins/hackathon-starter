@@ -25,7 +25,7 @@ exports.getLogin = function(req, res) {
  * @param password
  */
 exports.postLogin = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
+  req.assert('email', 'Invalid email address').isEmail();
   req.assert('password', 'Password cannot be blank').notEmpty();
 
   var errors = req.validationErrors();
@@ -43,7 +43,7 @@ exports.postLogin = function(req, res, next) {
     if (err) return next(err);
     if (!user) {
       if (req.headers['x-validate']) {
-        return res.json({ errors: [ { param: 'email', msg: 'Email or password invalid'}, { param: 'password', msg: '' } ] });
+        return res.json({ errors: [ { param: 'email', msg: ''}, { param: 'password', msg: 'Invalid email address or password' } ] });
       } else {
         req.flash('errors', { msg: info.message });
         return res.redirect('/login');
@@ -87,9 +87,9 @@ exports.getSignup = function(req, res) {
 exports.postSignup = function(req, res, next) {
   if (req.user) return res.redirect('/account');
   
-  req.assert('email', 'Email address is not valid').isEmail();
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('email', 'Invalid email address').isEmail();
+  req.assert('password', 'Your password must be at least 4 characters').len(4);
+  req.assert('confirmPassword', 'The passwords do not match').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -112,7 +112,7 @@ exports.postSignup = function(req, res, next) {
     
     // Check if user exists already
     if (existingUser) {
-      var msg = 'An account with that email address already exists.';
+      var msg = 'An account with that email address already exists';
       if (req.headers['x-validate']) {
         return res.json({ errors: [ { param: 'email', msg: msg } ] });
       } else {
@@ -145,7 +145,7 @@ exports.getAccount = function(req, res) {
  * Update profile information.
  */
 exports.postUpdateProfile = function(req, res, next) {
-  req.assert('email', 'Email address is not valid').isEmail();
+  req.assert('email', 'Invalid email address').isEmail();
 
   var errors = req.validationErrors();
 
@@ -196,8 +196,8 @@ exports.postUpdateProfile = function(req, res, next) {
  * @param password
  */
 exports.postUpdatePassword = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('password', 'Your password must be at least 4 characters').len(4);
+  req.assert('confirmPassword', 'The passwords do not match').equals(req.body.password);
 
   var errors = req.validationErrors();
 
@@ -284,7 +284,7 @@ exports.getChangePassword = function(req, res) {
  * @param token
  */
 exports.postChangePassword = function(req, res, next) {
-  req.assert('password', 'Password must be at least 4 characters long.').len(4);
+  req.assert('password', 'Your password must be at least 4 characters.').len(4);
   req.assert('confirm', 'Passwords must match.').equals(req.body.password);
 
   var errors = req.validationErrors();

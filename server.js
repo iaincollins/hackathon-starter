@@ -92,10 +92,16 @@ app.use(function(req, res, next) {
 });
 app.use(function(req, res, next) {
   // Remember original destination before login.
+  
+  // Exceptions for paths we want to ignore
+  // e.g. login pages, JavaScript files that make ajax calls
   var path = req.path.split('/')[1];
-  if (/auth|login|logout|signup|js|fonts|favicon/i.test(path)) {
+  if (/auth|login|logout|signup|js|fonts|favicon/i.test(path))
     return next();
-  }
+
+  if (req.path == "/account/password")
+    return next();
+    
   req.session.returnTo = req.path;
   next();
 });
@@ -148,6 +154,7 @@ app.get('/signup', routes.user.getSignup);
 app.post('/signup', routes.user.postSignup);
 app.get('/contact', routes.contact.getContact);
 app.post('/contact', routes.contact.postContact);
+app.get('/profile', routes.passport.isAuthenticated, routes.user.getAccount);
 app.get('/account', routes.passport.isAuthenticated, routes.user.getAccount);
 app.post('/account/profile', routes.passport.isAuthenticated, routes.user.postUpdateProfile);
 app.post('/account/password', routes.passport.isAuthenticated, routes.user.postUpdatePassword);
@@ -158,20 +165,20 @@ app.get('/account/unlink/:provider', routes.passport.isAuthenticated, routes.use
  * OAuth sign-in routes.
  */
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/profile' }), function(req, res) {
+  res.redirect(req.session.returnTo || '/profile');
 });
 app.get('/auth/github', passport.authenticate('github'));
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/profile' }), function(req, res) {
+  res.redirect(req.session.returnTo || '/profile');
 });
 app.get('/auth/google', passport.authenticate('google', { scope: 'profile email' }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/profile' }), function(req, res) {
+  res.redirect(req.session.returnTo || '/profile');
 });
 app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), function(req, res) {
-  res.redirect(req.session.returnTo || '/');
+app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/profile' }), function(req, res) {
+  res.redirect(req.session.returnTo || '/profile');
 });
 
 /**
