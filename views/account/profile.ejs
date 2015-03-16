@@ -2,6 +2,7 @@
 <% include ../partials/flash %>
 <div class="row">
   <div class="col-sm-8">
+    <h2>Your details</h2>
     <form action="/account/profile" method="post" class="form-horizontal">
       <input type="hidden" name="_csrf" value="<%= _csrf %>">
       <div class="form-group">
@@ -48,11 +49,7 @@
         </div>
       </div>
     </form>
-    <div class="page-header">
-      <h3>
-        Change your password
-      </h3>
-    </div>
+    <h2>Change your password</h2>
     <form action="/account/password" method="post" class="form-horizontal">
       <input type="hidden" name="_csrf" value="<%= _csrf %>">
       <div class="form-group">
@@ -73,24 +70,18 @@
         </div>
       </div>
     </form>
-    <div class="page-header">
-      <h3>
-        Delete your account
-      </h3>
-    </div>
+    <h2>Delete your account</h2>
     <p>
-      You can delete your account at any time, but this action is irreversible.
+      You can delete your account at any time. If an account is deleted it cannot be restored.
     </p>
-    <form action="/account/delete" method="post">
-      <input type="hidden" name="_csrf" value="<%= _csrf %>">
-      <button type="submit" class="btn btn-danger"><i class="fa fa-lg fa-trash"></i> Delete my account</button>
-    </form>
-    <br/>
+    <p>
+      <a href="#" data-toggle="modal" data-target="#deleteAccountModal" class="btn btn-danger"><i class="fa fa-lg fa-trash"></i> Delete this account</a>
+    </p>
   </div>
   <div class="col-sm-4">
     <% // @todo Don't show unlink options if a password isn't set and/or email isn't verified %>
     <h2>Link accounts</h2>
-    <p class="lead">Linking accounts allows you to log in more easily and allows to you to log in if you lose access to your email account.</p>
+    <p>Linking accounts allows you to log in more easily and allows to you to log in if you lose access to your email.</p>
     <p>
       <% if (user.facebook) { %>
         <a href="/account/unlink/facebook" class="btn btn-block btn-danger"><i class="fa fa-lg fa-fw fa-facebook"></i> Unlink your Facebook account</a>
@@ -119,5 +110,26 @@
         <a href="/auth/github" class="btn btn-block btn-default"><i class="fa fa-lg fa-fw fa-github"></i> Link to your GitHub account</a>
       <% } %>
     </p>
+  </div>
+</div>
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deleteAccountModalLabel">Confirm account deletion</h4>
+      </div>
+      <div class="modal-body">
+        <form name="delete-account" method="post" action="/account/delete">
+          <input type="hidden" name="_csrf" value="<%= _csrf %>">
+          <p class="lead">
+            <strong><i class="fa fa-lg fa-warning"></i> Warning</strong> If you delete your account, it cannot be restored.
+          </p>
+          <p class="text-right">
+            <button type="submit" class="btn btn-danger"><i class="fa fa-lg fa-trash"></i> Confirm account deletion</button>
+          </p>
+        </form>      
+      </div>
+    </div>
   </div>
 </div>

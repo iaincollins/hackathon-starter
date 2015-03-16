@@ -26,5 +26,11 @@
       <% include partials/sign-in-dialogs %>
     <% } %>
     <script src="/js/validator.js"></script>
+    <script>
+      $(function() { 
+        $('a[data-toggle="modal"]').attr('href', "#");
+        $('a[data-toggle="dropdown"]').attr('href', "#");
+      });
+    </script>
   </body>
 </html>
