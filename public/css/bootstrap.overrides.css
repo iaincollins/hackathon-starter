@@ -1,0 +1,11 @@
+.modal-draggable .modal-backdrop {
+  position: fixed;
+}
+
+.modal.modal-draggable {
+    overflow: overflow-y;
+}
+
+.modal-draggable .modal-header:hover {
+  cursor: move;
+}
