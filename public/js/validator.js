@@ -43,6 +43,10 @@ $(document).on('submit', 'form[data-validator="true"]', function(e) {
             // choose the nearest "boostrap select" element.
             target = $('*[name="'+field+'"]', form).siblings('.bootstrap-select');
           }
+          
+          // Hide all currently visible alerts on the page (to avoid confusion)
+          $(".alert").hide();
+          
           // Add the error class to the target's container
           if (target != null) {
             target.parents(".form-group").addClass('has-error');
