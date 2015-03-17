@@ -35,13 +35,12 @@ exports.postContact = function(req, res) {
 
   var errors = req.validationErrors();
 
+  if (req.headers['x-validate'])
+    return res.json({ errors: errors });
+
   if (errors) {
-    if (req.headers['x-validate']) {
-      return res.json({ errors: errors });
-    } else {
-      req.flash('errors', errors);
-      return res.render('contact');
-    }
+    req.flash('errors', errors);
+    return res.render('contact');
   }
 
   var from = req.body.email;

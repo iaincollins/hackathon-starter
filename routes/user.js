@@ -121,6 +121,10 @@ exports.postSignup = function(req, res, next) {
       }
     }
     
+    // If it's just a validation request, return without error
+    if (req.headers['x-validate'])
+      return res.json({ errors: errors });
+    
     user.save(function(err) {
       if (err) return next(err);
       req.logIn(user, function(err) {
@@ -159,6 +163,9 @@ exports.postUpdateProfile = function(req, res, next) {
   }
   
   User.findById(req.user.id, function(err, user) {
+    
+    // @todo If email address changed, check to see if in use and return error (so x-validate doesn't trigger an update)
+    
     if (err) return next(err);
     user.email = req.body.email || '';
     user.profile.name = req.body.name || '';
@@ -201,13 +208,12 @@ exports.postUpdatePassword = function(req, res, next) {
 
   var errors = req.validationErrors();
 
+  if (req.headers['x-validate'])
+    return res.json({ errors: errors });
+
   if (errors) {
-    if (req.headers['x-validate']) {
-      return res.json({ errors: errors });
-    } else {
-      req.flash('errors', errors);
-      return res.render('account');
-    }
+    req.flash('errors', errors);
+    return res.render('account');
   }
 
   User.findById(req.user.id, function(err, user) {

@@ -115,11 +115,12 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: week * 4 }));
  * Route handlers
  */
 var routes = {
+  passport: require('./routes/passport'),
+  user: require('./routes/user'),
   home: require('./routes/home'),
   about: require('./routes/about'),
   contact : require('./routes/contact'),
-  user: require('./routes/user'),
-  passport: require('./routes/passport')
+  post: require('./routes/post')
 };
 
 app.use(function(req, res, next) {
@@ -160,6 +161,10 @@ app.post('/account/profile', routes.passport.isAuthenticated, routes.user.postUp
 app.post('/account/password', routes.passport.isAuthenticated, routes.user.postUpdatePassword);
 app.post('/account/delete', routes.passport.isAuthenticated, routes.user.postDeleteAccount);
 app.get('/account/unlink/:provider', routes.passport.isAuthenticated, routes.user.getOauthUnlink);
+app.get('/posts', routes.post.getPosts);
+app.get('/post/new', routes.passport.isAuthenticated, routes.post.getNewPost);
+app.post('/post/new', routes.passport.isAuthenticated, routes.post.postNewPost);
+app.get('/post/:id', routes.post.getPost);
 
 /**
  * OAuth sign-in routes.

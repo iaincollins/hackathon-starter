@@ -21,7 +21,7 @@ $(document).on('submit', 'form[data-validator="true"]', function(e) {
     headers: { 'X-Validate': 'true' },
     cache: false, // Append timestamp
     success: function(response) {
-      if (response.errors == {}) {
+      if (!response.errors || response.errors == {}) {
         // If no errors, then add data-validated=true attribute
         $(form).attr('data-validated', 'true');
         $(form).submit();
@@ -51,7 +51,7 @@ $(document).on('submit', 'form[data-validator="true"]', function(e) {
           if (target != null) {
             target.parents(".form-group").addClass('has-error');
             //target.tooltip("destroy");            
-//            alert(msg);
+
             if (msg != '') {
               // target.attr('title', message);
               // target.tooltip({ trigger: 'manual', placement: 'bottom'});
