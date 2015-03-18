@@ -5,7 +5,8 @@ var crypto = require('crypto');
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true, required : true},
   password: String,
-
+  avatar: String,
+  
   facebook: String,
   twitter: String,
   google: String,
@@ -19,6 +20,8 @@ var userSchema = new mongoose.Schema({
     website: { type: String, default: '' }
   },
 
+  emailVerfified: Date,
+  emailVerificationToken: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date
 });
@@ -32,7 +35,9 @@ userSchema.pre('save', function(next) {
   var user = this;
 
   if (!user.isModified('password')) return next();
-
+  
+  // @todo Handle updating posts when a user changes their email address
+  
   bcrypt.genSalt(5, function(err, salt) {
     if (err) return next(err);
 
@@ -48,7 +53,6 @@ userSchema.pre('save', function(next) {
  * Validate user's password.
  * Used by Passport-Local Strategy for password validation.
  */
-
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
     if (err) return cb(err);
@@ -60,7 +64,6 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
  * Get URL to a user's gravatar.
  * Used in Navbar and Account Management page.
  */
-
 userSchema.methods.gravatar = function(size) {
   if (!size) size = 200;
 

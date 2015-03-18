@@ -9,8 +9,15 @@
     <tbody>
     <% posts.forEach(function(post) { %>
       <tr>
-        <td class="col-xs-7 col-sm-8 col-md-9 lead">
-          <strong><a href="/post/<%= post._id %>"><i class="fa fa-file-text-o"></i> <%= post.title %></a></strong>
+        <td class="col-xs-7 col-sm-8 col-md-9">
+          <span class="lead">
+            <strong><a href="/post/<%= post._id %>"><i class="fa fa-file-text-o"></i> <%= post.title %></a></strong>
+          </span>
+          <span class="text-muted">by</span>
+          <span>
+            <img src="<%= post.creatorGravatar(20) %>" alt="Avatar" hspace="3" class="img-circle" />
+            <%= post.creator.name || "Anonymous" %>
+          </span>
         </td>
         <td class="col-xs-5 col-sm-4 col-md-3 text-right lead text-muted">
           <i class="fa fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time>

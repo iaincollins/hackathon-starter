@@ -9,7 +9,7 @@ $(document).on('submit', 'form[data-validator="true"]', function(e) {
     
   e.preventDefault();
   
-  $('*[type="submit"]', this).addClass('disabled');
+  //$('*[type="submit"]', this).addClass('disabled');
   
   var form = this;
   
@@ -69,7 +69,7 @@ $(document).on('submit', 'form[data-validator="true"]', function(e) {
       // If validation fails, then set the data-validator attribute to false,
       // allowing the form to submit normally and the server to handle the error
       $(form).attr('data-validator', 'false');
-      $('*[type="submit"]', form).removeClass('disabled');
+      // $('*[type="submit"]', form).removeClass('disabled');
       $(form).submit();
     }
   });
@@ -81,9 +81,4 @@ $(document).on('submit', 'form[data-validator="true"]', function(e) {
 $(document).on('focus blur keydown change', '.has-error', function() {
   $(this).removeClass("has-error");
   var form = $(this).parents('form');
-//  $(this).children('*[name="'+field+'"]'
-  
-//             if ($('*[name="'+field+'"]', form).is(":visible")) {
-//  alert(t)
-  // $('*', this).tooltip('hide');
 });

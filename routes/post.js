@@ -26,13 +26,20 @@ exports.postNewPost = function(req, res, next) {
 
   var post = new Post({
     title: req.body.title,
-    body: req.body.body
+    body: req.body.body,
+    creator: {
+      id: req.user.id,
+      name: req.user.profile.name,
+      email: req.user.email
+    }
   });
 
+    console.log (req.user);
+    
   post.save(function(err) {
     if (err) return next(err);
     // @todo go to new post URL
-    return res.redirect('/posts');  
+    return res.redirect('/post/'+post._id);  
   });
 
 };
