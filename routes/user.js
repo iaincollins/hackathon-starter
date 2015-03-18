@@ -108,8 +108,7 @@ exports.postSignup = function(req, res, next) {
     password: req.body.password
   });
 
-  User.findOne({ email: req.body.email }, function(err, existingUser) {
-    
+  User.findOne({ email: req.body.email }, function(err, existingUser) {    
     // Check if user exists already
     if (existingUser) {
       var msg = 'An account with that email address already exists';
@@ -123,13 +122,13 @@ exports.postSignup = function(req, res, next) {
     
     // If it's just a validation request, return without error
     if (req.headers['x-validate'])
-      return res.json({ errors: errors });
+      return res.json({ errors: [] });
     
     user.save(function(err) {
       if (err) return next(err);
       req.logIn(user, function(err) {
         if (err) return next(err);
-        res.redirect('/');
+        res.redirect(req.session.returnTo || '/');
       });
     });
     
@@ -372,8 +371,12 @@ exports.postResetPassword = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/reset-password');
+    if (req.headers['x-validate']) {
+      return res.json({ errors: errors });
+    } else {
+      req.flash('errors', errors);
+      return res.redirect('/reset-password');
+    }
   }
 
   async.waterfall([
@@ -386,9 +389,17 @@ exports.postResetPassword = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
-          req.flash('errors', { msg: 'No account with that email address exists.' });
-          return res.redirect('/reset-password');
+          var msg = 'No account with that email address exists.';
+          if (req.headers['x-validate']) {
+            return res.json({ errors: [ { param: 'email', msg: msg } ] });
+          } else {
+            req.flash('errors', { msg: msg });
+            return res.redirect('/reset-password');
+          }
         }
+        
+        if (req.headers['x-validate'])
+          return res.json({ errors: [] });
 
         user.resetPasswordToken = token;
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour

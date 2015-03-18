@@ -21,7 +21,7 @@ $(document).on('submit', 'form[data-validator="true"]', function(e) {
     headers: { 'X-Validate': 'true' },
     cache: false, // Append timestamp
     success: function(response) {
-      if (!response.errors || response.errors == {}) {
+      if (!response.errors || response.errors.length == 0) {
         // If no errors, then add data-validated=true attribute
         $(form).attr('data-validated', 'true');
         $(form).submit();
