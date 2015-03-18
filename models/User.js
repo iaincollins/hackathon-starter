@@ -19,11 +19,16 @@ var userSchema = new mongoose.Schema({
     location: { type: String, default: '' },
     website: { type: String, default: '' }
   },
+  
+  permissions: {
+    verified: { type: Boolean, default: false },
+    moderator: { type: Boolean, default: false },
+    admin: { type: Boolean, default: false }
+  },
 
-  emailVerfified: Date,
-  emailVerificationToken: String,
   resetPasswordToken: String,
-  resetPasswordExpires: Date
+  resetPasswordExpires: Date,
+  emailVerificationToken: String
 });
 
 /**
@@ -33,7 +38,7 @@ var userSchema = new mongoose.Schema({
 
 userSchema.pre('save', function(next) {
   var user = this;
-
+  
   if (!user.isModified('password')) return next();
   
   // @todo Handle updating posts when a user changes their email address
@@ -74,5 +79,16 @@ userSchema.methods.gravatar = function(size) {
   var md5 = crypto.createHash('md5').update(this.email).digest('hex');
   return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
 };
+
+// /**
+//  * Return permissions for the current user
+//  */
+// userSchema.virtual('permissions').get(function() {
+//   return {
+//     verified: false,
+//     admin: false,
+//     moderator: false
+//   };
+// });
 
 module.exports = mongoose.model('User', userSchema);

@@ -29,19 +29,18 @@ postSchema.pre('save', function(next) {
   }
 });
 
-
 /**
  * Get URL to the creators gravatar.
  */
 postSchema.methods.creatorGravatar = function(size) {
-      if (!size) size = 200;
+  if (!size) size = 200;
 
-      if (!this.creator.email) {
-        return 'https://gravatar.com/avatar/?s=' + size + '&d=retro';
-      }
+  if (!this.creator.email) {
+    return 'https://gravatar.com/avatar/?s=' + size + '&d=retro';
+  }
 
-      var md5 = crypto.createHash('md5').update(this.creator.email).digest('hex');
-      return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
+  var md5 = crypto.createHash('md5').update(this.creator.email).digest('hex');
+  return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
 };
 
 

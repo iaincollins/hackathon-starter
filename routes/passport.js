@@ -49,7 +49,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
  *       - If there is, return an error message.
  *       - Else create a new account.
  */
-
 // Sign in with Facebook.
 passport.use(new FacebookStrategy(config.secrets.facebook, function(req, accessToken, refreshToken, profile, done) {
   if (req.user) {

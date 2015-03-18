@@ -2,6 +2,12 @@
 <div class="row">
   <div class="col-sm-9">
     <p class="lead"><%= post.body %></p>
+    <% if (typeof(user) != 'undefined' && user.id == post.creator.id) { %>
+    <br/>
+    <p class="text-right">
+      <a href="/post/edit/<%= post.id %>" class="btn btn-default"><i class="fa fa-lg fa-fw fa-pencil"></i> Edit</a>
+    </p>
+    <% } %>
   </div>
   <div class="col-sm-3">    
     <div class="media">

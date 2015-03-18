@@ -71,12 +71,73 @@ exports.getPosts = function(req, res) {
  * GET /post/:id
  */
 exports.getPost = function(req, res) {
-
   var postId = req.params.id;
 
-  console.log(postId);
-
-  Post.find({ _id: postId }, function (err, post) {
-    res.render('post/view', { title: res.locals.title + " - View Post", post: post[0] });
+  Post.find({ _id: postId }, function (err, post) {    
+    if (post.length == 0)      
+      return res.render('404');
+    
+    return res.render('post/view', { title: res.locals.title + " - " + post.title, post: post[0] });
   });
 };
+
+
+/**
+ * GET /post/edit/:id
+ */
+exports.getEditPost = function(req, res) {
+  var postId = req.params.id;
+
+  Post.find({ _id: postId }, function (err, post) {
+    if (post.length == 0)
+      return res.render('404');
+
+    if (req.user.id != post[0].creator.id 
+        && req.user.permissions.moderator != true
+        && req.user.permissions.admin != true )
+      return res.render('403');
+    
+    return res.render('post/edit', { title: res.locals.title + " - Edit " + post.title, post: post[0] });
+  });
+};
+
+/**
+ * POST /post/edit/:id
+ */
+exports.postEditPost = function(req, res) {
+  req.assert('id', 'The post ID cannot be blank').notEmpty();
+  req.assert('title', 'The title cannot be blank').notEmpty();
+  req.assert('body', 'The detail cannot be blank').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (req.headers['x-validate'])
+    return res.json({ errors: errors });
+  
+  if (errors) {
+    req.flash('errors', errors);
+    return res.render('new/post');
+  }
+  
+  Post.find({ _id: req.params.id }, function (err, post) {    
+    if (post.length == 0)      
+      return res.render('404');
+    
+    if (req.user.id != post[0].creator.id 
+        && req.user.permissions.moderator != true
+        && req.user.permissions.admin != true )
+      return res.render('403');
+    
+    post[0].title = req.body.title;
+    post[0].body = req.body.body;
+
+    post[0].save(function(err) {
+      if (err) return next(err);
+      // @todo go to new post URL
+      return res.render('post/view', { title: res.locals.title + " - " + post.title, post: post[0] });
+    });
+      
+  });
+  
+};
+

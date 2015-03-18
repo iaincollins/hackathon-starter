@@ -191,6 +191,8 @@ app.get('/account/unlink/:provider', routes.passport.isAuthenticated, routes.use
 app.get('/posts', routes.post.getPosts);
 app.get('/post/new', routes.passport.isAuthenticated, routes.post.getNewPost);
 app.post('/post/new', routes.passport.isAuthenticated, routes.post.postNewPost);
+app.get('/post/edit/:id', routes.passport.isAuthenticated, routes.post.getEditPost);
+app.post('/post/edit/:id', routes.passport.isAuthenticated, routes.post.postEditPost);
 app.get('/post/:id', routes.post.getPost);
 
 /**

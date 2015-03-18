@@ -3,9 +3,10 @@
   <div class="col-sm-3"> <!-- required for floating -->
       <!-- Nav tabs -->
       <ul class="nav nav-tabs tabs-left tabs-vertical">
-        <li class="active"><a href="#details" data-toggle="tab">Your details</a></li>
-        <li><a href="#changePassword" data-toggle="tab">Change password</a></li>
-        <li><a href="#deleteAccount" data-toggle="tab">Delete account</a></li>
+        <li class="active"><a href="#details" data-toggle="tab"><i class="fa fa-lg fa-fw fa-user"></i> Your details</a></li>
+        <li><a href="#changePassword" data-toggle="tab"><i class="fa fa-lg fa-fw fa-key"></i> Change password</a></li>
+        <li><a href="#permissions" data-toggle="tab"><i class="fa fa-lg fa-fw fa-lock"></i> Permissions</a></li>
+        <li><a href="#deleteAccount" data-toggle="tab"><i class="fa fa-lg fa-fw fa-trash"></i> Delete account</a></li>
       </ul>
   </div>
   <div class="col-sm-9">  
@@ -55,6 +56,38 @@
                 </div>
               </div>
             </form>
+          </div>
+          
+          <div class="tab-pane" id="permissions">          
+            <h2>Permissions</h2>
+            <br/>
+            <% if (user.permissions.verififed) { %>
+            <p class="text-success">
+              <i class="fa fa-lg fa-fw fa-check-circle"></i> Email address verififed
+            </p>
+            <% } else { %>
+            <p class="text-danger">
+              <i class="fa fa-lg fa-fw fa-times-circle"></i> Email address not verififed
+            </p>
+            <% } %>
+            <% if (user.permissions.moderator) { %>
+            <p class="text-success">
+              <i class="fa fa-lg fa-fw fa-check-circle"></i> You have moderator access 
+            </p>
+            <% } else { %>
+            <p class="text-danger">
+              <i class="fa fa-lg fa-fw fa-times-circle"></i> You do not have moderator access
+            </p>
+            <% } %>
+            <% if (user.permissions.admin) { %>
+            <p class="text-success">
+              <i class="fa fa-lg fa-fw fa-check-circle"></i> You have administrator access 
+            </p>
+            <% } else { %>
+            <p class="text-danger">
+              <i class="fa fa-lg fa-fw fa-times-circle"></i> You do not have administrator access
+            </p>
+            <% } %>
           </div>
 
           <div class="tab-pane" id="changePassword">
@@ -167,7 +200,6 @@
     </div>
   </div>
 </div>
-
 
 <div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
   <div class="modal-dialog">

@@ -61,7 +61,6 @@ exports.postLogin = function(req, res, next) {
  * GET /logout
  * Log out.
  */
-
 exports.logout = function(req, res) {
   req.logout();
   res.redirect('/');
@@ -71,7 +70,6 @@ exports.logout = function(req, res) {
  * GET /signup
  * Signup page.
  */
-
 exports.getSignup = function(req, res) {
   if (req.user) return res.redirect('/account');
   res.render('account/signup', { title: res.locals.title + " - Sign up" });
@@ -83,7 +81,6 @@ exports.getSignup = function(req, res) {
  * @param email
  * @param password
  */
-
 exports.postSignup = function(req, res, next) {
   if (req.user) return res.redirect('/account');
   
@@ -107,7 +104,7 @@ exports.postSignup = function(req, res, next) {
     email: req.body.email,
     password: req.body.password
   });
-
+  
   User.findOne({ email: req.body.email }, function(err, existingUser) {    
     // Check if user exists already
     if (existingUser) {

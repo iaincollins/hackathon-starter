@@ -1,0 +1,37 @@
+<h1 class="page-header">Edit post</h1>
+<div class="row">
+  <div class="col-sm-9">
+    <form role="form" method="post" action="/post/edit/<%= post.id %>" class="form-horizontal" data-validator="true">
+      <div class="messages"></div>
+      <input type="hidden" name="_csrf" value="<%= _csrf %>">
+      <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">Title</label>
+        <div class="col-sm-10"><input type="text" name="title" id="title" autofocus="" value="<%= post.title %>" autocomplete="off" class="form-control"/></div>
+      </div>
+      <div class="form-group">
+        <label for="message" class="col-sm-2 control-label">Detail</label>
+        <div class="col-sm-10"><textarea type="text" name="body" id="body" rows="7" class="form-control" autocomplete="off" ><%= post.body %></textarea></div>
+      </div>
+      <div class="form-group text-right">
+        <div class="col-sm-offset-2 col-sm-10">
+          <a href="/post/<%= post.id %>" class="btn btn-default"><i class="fa fa-lg fa-fw fa-ban"></i> Cancel</a>
+          <button type="submit" class="btn btn-primary"><i class="fa fa-lg fa-fw fa-check"></i> Save changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-sm-3">    
+    <div class="media">
+      <div class="media-left">
+        <a href="#">
+         <img src="<%= post.creatorGravatar(50) %>" alt="Avatar" class="img-circle">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><%= post.creator.name || "Anonymous" %></h3>
+        <span class="text-muted"><i class="fa fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time></span>
+      </div>
+    </div>
+    </h3>
+  </div>
+</div>
