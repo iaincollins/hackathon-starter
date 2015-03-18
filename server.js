@@ -88,6 +88,10 @@ app.use(function(req, res, next) {
 
   // Make user object available in templates.  
   res.locals.user = req.user;
+  
+  // Export selected theme to all templates (so can be used in layout)
+  res.locals.theme = req.session.theme;
+  
   next();
 });
 app.use(function(req, res, next) {
@@ -96,7 +100,7 @@ app.use(function(req, res, next) {
   // Exceptions for paths we want to ignore
   // e.g. login pages, JavaScript files that make ajax calls
   var path = req.path.split('/')[1];
-  if (/auth|login|logout|signup|js|fonts|favicon/i.test(path))
+  if (/auth|login|css|images|logout|theme|signup|js|fonts|favicon/i.test(path))
     return next();
 
   if (req.path == "/account/password")
@@ -120,6 +124,7 @@ var routes = {
   home: require('./routes/home'),
   about: require('./routes/about'),
   contact : require('./routes/contact'),
+  theme: require('./routes/theme'),
   post: require('./routes/post')
 };
 
@@ -146,6 +151,7 @@ app.get('/', routes.home.index);
 app.get('/about', routes.about.index);
 app.get('/login', routes.user.getLogin);
 app.post('/login', routes.user.postLogin);
+app.post('/theme', routes.theme.postTheme);
 app.get('/logout', routes.user.logout);
 app.get('/reset-password', routes.user.getResetPassword);
 app.post('/reset-password', routes.user.postResetPassword);
@@ -157,6 +163,7 @@ app.get('/contact', routes.contact.getContact);
 app.post('/contact', routes.contact.postContact);
 app.get('/profile', routes.passport.isAuthenticated, routes.user.getAccount);
 app.get('/account', routes.passport.isAuthenticated, routes.user.getAccount);
+app.get('/account/profile', routes.passport.isAuthenticated, routes.user.getAccount);
 app.post('/account/profile', routes.passport.isAuthenticated, routes.user.postUpdateProfile);
 app.post('/account/password', routes.passport.isAuthenticated, routes.user.postUpdatePassword);
 app.post('/account/delete', routes.passport.isAuthenticated, routes.user.postDeleteAccount);

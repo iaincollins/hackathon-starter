@@ -1,54 +1,29 @@
 <h1 class="page-header">View posts</h1>
-<div class="row">
-  <div class="col-md-8">
-    <p class="lead">
-      <strong>Page <%= page %> of <%= Math.ceil(postCount / postLimit) %></strong> (<%= postCount %> posts)
-    </p>
+<% if (postCount > 0) { %>
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+    <% include ../partials/posts-pagination %>
   </div>
-  <div class="col-md-4">
-    <ul class="pager pull-right" style="margin-top: 0;">
-      <% if (page > 1) { %>
-      <li><a href="?page=<%= page - 1 %>"><i class="fa fa-lg fa-fw fa-arrow-left"></i>Previous</a></li>
-      <% } else { %>
-      <li class="disabled"><span ><i class="fa fa-lg fa-fw fa-arrow-left"></i> Previous</span></li>
-      <% } %>
-      <% if (page < Math.ceil(postCount / postLimit)) { %>
-      <li><a href="?page=<%= page + 1 %>">Next <i class="fa fa-lg fa-fw fa-arrow-right"></i></a></li>
-      <% } else { %>
-      <li class="disabled"><span>Next <i class="fa fa-lg fa-fw fa-arrow-right"></i></span></li>
-      <% } %>
-    </ul>
-  </div>
-</div>
-<table class="table table-striped">
-  <tbody>
-  <% posts.forEach(function(post) { %>
-    <tr>
-      <td class="lead">
-        <strong><a href="/post/<%= post._id %>"><i class="fa fa-file-text-o"></i> <%= post.title %></a></strong>
-      </td>
-    </tr>
-  <% }) %>
-  </tbody>
-</table>
-<div class="row">
-  <div class="col-md-8">
-    <p class="lead">
-      <strong>Page <%= page %> of <%= Math.ceil(postCount / postLimit) %></strong> (<%= postCount %> posts)
-    </p>
-  </div>
-  <div class="col-md-4">
-    <ul class="pager pull-right" style="margin-top: 0;">
-      <% if (page > 1) { %>
-      <li><a href="?page=<%= page - 1 %>"><i class="fa fa-lg fa-fw fa-arrow-left"></i>Previous</a></li>
-      <% } else { %>
-      <li class="disabled"><span ><i class="fa fa-lg fa-fw fa-arrow-left"></i> Previous</span></li>
-      <% } %>
-      <% if (page < Math.ceil(postCount / postLimit)) { %>
-      <li><a href="?page=<%= page + 1 %>">Next <i class="fa fa-lg fa-fw fa-arrow-right"></i></a></li>
-      <% } else { %>
-      <li class="disabled"><span>Next <i class="fa fa-lg fa-fw fa-arrow-right"></i></span></li>
-      <% } %>
-    </ul>
+  <table class="table table-striped">
+    <tbody>
+    <% posts.forEach(function(post) { %>
+      <tr>
+        <td class="col-xs-7 col-sm-8 col-md-9 lead">
+          <strong><a href="/post/<%= post._id %>"><i class="fa fa-file-text-o"></i> <%= post.title %></a></strong>
+        </td>
+        <td class="col-xs-5 col-sm-4 col-md-3 text-right lead text-muted">
+          <i class="fa fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time>
+        </td>        
+      </tr>
+    <% }) %>
+    </tbody>
+  </table>
+  <div class="panel-footer">
+    <% include ../partials/posts-pagination %>
   </div>
 </div>
+<% } else { %>
+  <p class="lead">There are no posts yet.</p>
+  <p><a class="btn btn-primary" href="/post/new"><i class="fa fa-lg fa-fw fa-plus"></i> Create a new post</a></p>
+<% } %>

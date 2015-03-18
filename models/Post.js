@@ -1,15 +1,15 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
+var moment = require('moment');
 
 var postSchema = new mongoose.Schema({
   title: { type: String, required : true },
-  body: { type: String, required : true }
+  body: { type: String, required : true },
+  date: { type: Date, default: Date.now },
+  updated: { type: Date, default: Date.now }
   
-  /*
-  createdOn: Date,
-  updatedOn: Date,
-  
+  /*  
   creator: {
     id: { type: String, required : true },
     name: { type: String, required : true },
@@ -22,8 +22,8 @@ var postSchema = new mongoose.Schema({
  * Update the date on a post when it is modifeid
  */
 postSchema.pre('save', function(next) {
-  var post = this;
-  // @todo Update
+  if (!this.isNew) next();
+  this.updated = new Date();
   next();
 });
 

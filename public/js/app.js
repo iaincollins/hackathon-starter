@@ -4,4 +4,5 @@ $(function() {
   $(".modal-draggable .modal-dialog").draggable({
       handle: ".modal-header"
   });
+  $("time.timeago").timeago();
 });

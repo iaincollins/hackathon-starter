@@ -3,7 +3,7 @@ var Post = require('../models/Post');
 /**
  * GET /post/new
  */
-exports.getNewPost = function(req, res) {
+exports.getNewPost = function(req, res) {  
   res.render('post/new', { title: res.locals.title + " - New post" });
 };
 
@@ -48,15 +48,9 @@ exports.getPosts = function(req, res) {
   
   var pageNumber = (parseInt(req.query.page) > 1) ? parseInt(req.query.page) : 1;
 
-  console.log(pageNumber);
-  
   var skip = 0;
-  if (pageNumber > 1) {
+  if (pageNumber > 1)
     skip = (pageNumber - 1) * numberOfResults;    
-  } else {
-    console.log("NO SKIP");
-  }
-
   
   Post.find({}, null , { skip: skip, limit: numberOfResults, sort : { _id: -1 } }).exec(function (err, posts) {
     Post.count({}, function( err, count){

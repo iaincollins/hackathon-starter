@@ -1,6 +1,6 @@
 {
   "name": "node-skeleton",
-  "version": "1.0",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": ""
@@ -32,6 +32,7 @@
     "lodash": "^2.4.1",
     "lusca": "^1.0.0",
     "method-override": "^2.1.0",
+    "moment": "^2.9.0",
     "mongoose": "^3.8.12",
     "morgan": "^1.1.1",
     "nodemailer": "^1.0.1",
