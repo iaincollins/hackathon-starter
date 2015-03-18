@@ -50,14 +50,6 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="gravatar" class="col-sm-3 control-label">Image</label>
-                <div class="col-sm-7">
-                  <img src="<%= user.gravatar(50) %>" width="50" height="50" class=" img-rounded">
-                  <small>&nbsp; Change avatar at <a target="_blank" href="http://gravatar.com"><i class="fa fa-lg fa-external-link"></i> gravatar.com</a></small>
-                  </p>
-                </div>
-              </div>
-              <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
                   <button type="submit" class="btn btn btn-primary">Save changes</button>
                 </div>
@@ -107,10 +99,21 @@
       </div>
 
       <div class="col-sm-5">
+
+        <p class="text-center">
+          <img src="<%= user.gravatar(200) %>" class="img-circle">
+        </p>
+        <p class="text-center">
+          <small>&nbsp; You can change your avatar at <a target="_blank" href="http://gravatar.com"><i class="fa fa-lg fa-external-link"></i> gravatar.com</a></small>
+        </p>
+        
+        <br/>
+
         <% // @todo Don't show unlink options if a password isn't set and/or email isn't verified %>
-        <h2>Verify your identity</h2>
+        <h4>Verify your identity</h4>
         <p><strong>Tip!</strong> Verifying your identity allows you to log in even if you lose access to your email account.</p>
-        <br/>        
+        
+        <br/>
         
         <!-- Connected accounts -->
         <% if (user.facebook) { %>
@@ -177,15 +180,17 @@
         <h4 class="modal-title" id="deleteAccountModalLabel">Confirm account deletion</h4>
       </div>
       <div class="modal-body">
+        <br/>
+        <p class="lead">
+          <strong><i class="fa fa-lg fa-warning"></i> Warning</strong> If you delete your account, it cannot be restored.
+        </p>
+        <br/>
+      </div>
+      <div class="modal-footer">
         <form name="delete-account" method="post" action="/account/delete">
           <input type="hidden" name="_csrf" value="<%= _csrf %>">
-          <p class="lead">
-            <strong><i class="fa fa-lg fa-warning"></i> Warning</strong> If you delete your account, it cannot be restored.
-          </p>
-          <p class="text-right">
-            <button type="submit" class="btn btn-danger"><i class="fa fa-fw fa-lg fa-trash"></i> Confirm account deletion</button>
-          </p>
-        </form>      
+          <button type="submit" class="btn btn-danger"><i class="fa fa-fw fa-lg fa-trash"></i> CONFIRM ACCOUNT DELETION</button>
+        </form>
       </div>
     </div>        
 </div>
