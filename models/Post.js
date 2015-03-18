@@ -22,9 +22,12 @@ var postSchema = new mongoose.Schema({
  * Update the date on a post when it is modifeid
  */
 postSchema.pre('save', function(next) {
-  if (!this.isNew) next();
-  this.updated = new Date();
-  next();
+  if (this.isNew) {
+    next();
+  } else {
+    this.updated = new Date();
+    next();
+  }
 });
 
 module.exports = mongoose.model('Post', postSchema);
