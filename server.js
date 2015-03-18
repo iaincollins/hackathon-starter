@@ -2,25 +2,26 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var compress = require('compression');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var logger = require('morgan');
-var csrf = require('lusca').csrf();
-var methodOverride = require('method-override');
-var _ = require('lodash');
-var MongoStore = require('connect-mongo')({ session: session });
-var flash = require('express-flash');
-var path = require('path');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var expressValidator = require('express-validator');
-var connectAssets = require('connect-assets');
-var ejs = require('ejs');
-var partials = require('express-partials');
-var app = express();
+var express = require('express'),
+    cookieParser = require('cookie-parser'),
+    compress = require('compression'),
+    session = require('express-session'),
+    bodyParser = require('body-parser'),
+    logger = require('morgan'),
+    csrf = require('lusca').csrf(),
+    methodOverride = require('method-override'),
+    _ = require('lodash'),
+    MongoStore = require('connect-mongo')({ session: session }),
+    flash = require('express-flash'),
+    path = require('path'),
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    expressValidator = require('express-validator'),
+    connectAssets = require('connect-assets'),
+    ejs = require('ejs'),
+    partials = require('express-partials'),
+    i18n = require("i18n"),
+    app = express();
 
 /**
  * API keys and Passport configuration.
@@ -43,6 +44,25 @@ mongoose.connection.on('error', function() {
  * CSRF whitelist.
  */
 var csrfExclude = [];
+
+// i18n configuration
+i18n.configure({
+    // setup some locales - other locales default to en silently
+    locales:['en', 'de'],
+    defaultLocale: 'de',
+
+    // set cookie name to parse locale settings from
+    cookie: 'lang',
+
+    // where to find json files
+    directory: __dirname + '/locales',
+
+    // whether to write new locale information to disk - defaults to true
+    updateFiles: false,
+
+    // what to use as the indentation unit - defaults to "\t"
+    indent: "\t",
+});
 
 /**
  * Express configuration.
