@@ -1,17 +1,15 @@
 <h1 class="page-header">View posts</h1>
 <% if (postCount > 0) { %>
-<div class="panel panel-default">
+<div xclass="panel panel-default">
   <!-- Default panel contents -->
-  <div class="panel-heading">
-    <% include ../partials/posts-pagination %>
-  </div>
+  <% include ../partials/posts-pagination %>
   <table class="table table-striped">
     <tbody>
     <% posts.forEach(function(post) { %>
       <tr>
         <td class="col-xs-7 col-sm-8 col-md-9">
-          <span class="lead">
-            <strong><a href="/post/<%= post._id %>"><i class="fa fa-file-text-o"></i> <%= post.title %></a></strong>
+          <span>
+            <h4 style="display: inline-block;"><a href="/post/<%= post._id %>"><i class="fa fa-fw fa-file-text-o"></i></a> <a href="/post/<%= post._id %>"><%= post.title %></a></h4>
           </span>
           <span class="text-muted">by</span>
           <span>
@@ -19,16 +17,14 @@
             <%= post.creator.name || "Anonymous" %>
           </span>
         </td>
-        <td class="col-xs-5 col-sm-4 col-md-3 text-right lead text-muted">
-          <i class="fa fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time>
+        <td class="col-xs-5 col-sm-4 col-md-3 text-right text-muted">
+          <i class="fa fa-lg fa-fw fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time>
         </td>        
       </tr>
     <% }) %>
     </tbody>
   </table>
-  <div class="panel-footer">
-    <% include ../partials/posts-pagination %>
-  </div>
+  <% include ../partials/posts-pagination %>
 </div>
 <% } else { %>
   <p class="lead">There are no posts yet.</p>

@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
 var crypto = require('crypto');
-var moment = require('moment');
 
 var postSchema = new mongoose.Schema({
   title: { type: String, required : true },
@@ -14,7 +12,6 @@ var postSchema = new mongoose.Schema({
     name: { type: String, default: 'Anonymous' },
     email: { type: String }
   }
-
 });
 
 /**

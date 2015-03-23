@@ -15,3 +15,19 @@
 .modal-dialog {
   z-index: 10000;
 }
+
+/* Dialog animations */
+
+.modal.fade .modal-dialog {
+  -webkit-transform: none;
+  transform: none;
+  -webkit-animation: bounce-out-animation 500ms linear both;
+  animation: bounce-out-animation 500ms linear both;
+}
+
+.modal.fade.in .modal-dialog {
+  -webkit-transform: none;
+  transform: none;
+  -webkit-animation: bounce-in-animation 500ms linear both;
+  animation: bounce-in-animation 500ms linear both;
+}

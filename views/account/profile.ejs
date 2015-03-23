@@ -208,7 +208,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="deleteAccountModalLabel">Confirm account deletion</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body text-center">
         <br/>
         <p class="lead">
           <strong><i class="fa fa-lg fa-warning"></i> Warning</strong> If you delete your account, it cannot be restored.
@@ -218,7 +218,7 @@
       <div class="modal-footer">
         <form name="delete-account" method="post" action="/account/delete">
           <input type="hidden" name="_csrf" value="<%= _csrf %>">
-          <button type="submit" class="btn btn-danger"><i class="fa fa-fw fa-lg fa-trash"></i> CONFIRM ACCOUNT DELETION</button>
+          <button type="submit" class="btn btn-danger"><i class="fa fa-fw fa-lg fa-trash"></i> DELETE ACCOUNT</button>
         </form>
       </div>
     </div>        

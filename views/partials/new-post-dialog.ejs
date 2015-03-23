@@ -1,0 +1,61 @@
+<div class="modal fade modal-draggable" id="newPostModal" tabindex="-1" role="dialog" aria-labelledby="newPostModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="newPostModalLabel">New Post</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <form role="form" method="post" action="/post/new" class="form-horizontal" data-validator="true">
+              <div class="messages"></div>
+              <input type="hidden" name="_csrf" value="<%= _csrf %>">
+              <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Title</label>
+                <div class="col-sm-10"><input type="text" name="title" id="title" autofocus="" autocomplete="off" class="form-control"/></div>
+              </div>
+              <div class="form-group">
+                <label for="message" class="col-sm-2 control-label">Detail</label>
+                <div class="col-sm-10"><textarea type="text" name="body" id="body" rows="10" class="form-control" autocomplete="off" ></textarea></div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-5">
+                    <div class="media">
+                      <div class="media-left">
+                        <a href="#">
+                         <img src="<%= user.gravatar(42) %>" alt="Avatar" class="img-circle">
+                        </a>
+                      </div>
+                      <div class="media-body">
+                        <h4 class="media-heading"><%= user.profile.name || "Anonymous" %></h4>
+                        <span class="text-muted"><i class="fa fa-clock-o"></i> <time><%= new Date().toDateString() %></time></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-5 text-right">
+                    <button type="submit" class="btn btn-primary"> Submit post</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="hidden col-sm-3">
+            <div class="media">
+              <div class="media-left">
+                <a href="#">
+                 <img src="<%= user.gravatar(50) %>" alt="Avatar" class="img-circle">
+                </a>
+              </div>
+              <div class="media-body">
+                <h3 class="media-heading"><%= user.profile.name || "Anonymous" %></h3>
+                <span class="text-muted"><i class="fa fa-clock-o"></i> <time><%= new Date().toDateString() %></time></span>
+              </div>
+            </div>
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

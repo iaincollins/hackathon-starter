@@ -80,15 +80,4 @@ userSchema.methods.gravatar = function(size) {
   return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
 };
 
-// /**
-//  * Return permissions for the current user
-//  */
-// userSchema.virtual('permissions').get(function() {
-//   return {
-//     verified: false,
-//     admin: false,
-//     moderator: false
-//   };
-// });
-
 module.exports = mongoose.model('User', userSchema);
