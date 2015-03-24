@@ -58,7 +58,6 @@ exports.getPosts = function(req, res) {
     skip = (pageNumber - 1) * numberOfResults;    
   
   Post.find({}, null , { skip: skip, limit: numberOfResults, sort : { _id: -1 } }).exec(function (err, posts) {
-    console.log(posts);
     Post.count({}, function( err, count) {
         res.render('post/list', { title: res.locals.title + " - Posts", posts: posts, postCount: count, postLimit: numberOfResults, page: pageNumber });
     });
