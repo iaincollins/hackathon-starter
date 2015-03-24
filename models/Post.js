@@ -1,7 +1,13 @@
-var mongoose = require('mongoose');
-var crypto = require('crypto');
+var mongoose = require('mongoose'),
+    autoIncrement = require('mongoose-auto-increment'),
+    crypto = require('crypto');
+
+var config = {
+  secrets: require('../config/secrets')
+};
 
 var postSchema = new mongoose.Schema({
+  id: Number,
   title: { type: String, required : true },
   body: { type: String, required : true },
   date: { type: Date, default: Date.now },
@@ -40,5 +46,12 @@ postSchema.methods.creatorGravatar = function(size) {
   return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
 };
 
+var connection = mongoose.createConnection(config.secrets.db); 
+autoIncrement.initialize(connection);
+postSchema.plugin(autoIncrement.plugin, {
+    model: 'Post',
+    field: 'id',
+    startAt: 1
+});
 
 module.exports = mongoose.model('Post', postSchema);

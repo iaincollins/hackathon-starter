@@ -24,11 +24,10 @@ var express = require('express'),
     app = express();
 
 /**
- * API keys and Passport configuration.
+ * App configuration settings
  */
 var config = {
   app: require('./config/app'),
-  secrets: require('./config/secrets'),
   secrets: require('./config/secrets')
 };
 

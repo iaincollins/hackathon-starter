@@ -34,12 +34,10 @@ exports.postNewPost = function(req, res, next) {
     }
   });
 
-    console.log (req.user);
-    
   post.save(function(err) {
     if (err) return next(err);
     // @todo go to new post URL
-    return res.redirect('/post/'+post._id);  
+    return res.redirect('/post/'+post.id);  
   });
 
 };
@@ -60,7 +58,8 @@ exports.getPosts = function(req, res) {
     skip = (pageNumber - 1) * numberOfResults;    
   
   Post.find({}, null , { skip: skip, limit: numberOfResults, sort : { _id: -1 } }).exec(function (err, posts) {
-    Post.count({}, function( err, count){
+    console.log(posts);
+    Post.count({}, function( err, count) {
         res.render('post/list', { title: res.locals.title + " - Posts", posts: posts, postCount: count, postLimit: numberOfResults, page: pageNumber });
     });
   });
@@ -73,7 +72,7 @@ exports.getPosts = function(req, res) {
 exports.getPost = function(req, res) {
   var postId = req.params.id;
 
-  Post.find({ _id: postId }, function (err, post) {    
+  Post.find({ id: postId }, function (err, post) {    
     if (post.length == 0)      
       return res.render('404');
     
@@ -88,7 +87,7 @@ exports.getPost = function(req, res) {
 exports.getEditPost = function(req, res) {
   var postId = req.params.id;
 
-  Post.find({ _id: postId }, function (err, post) {
+  Post.find({ id: postId }, function (err, post) {
     if (post.length == 0)
       return res.render('404');
 
@@ -119,7 +118,7 @@ exports.postEditPost = function(req, res) {
     return res.render('new/post');
   }
   
-  Post.find({ _id: req.params.id }, function (err, post) {    
+  Post.find({ id: req.params.id }, function (err, post) {    
     if (post.length == 0)      
       return res.render('404');
     
