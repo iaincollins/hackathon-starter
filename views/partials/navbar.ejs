@@ -1,6 +1,6 @@
 <div class="navbar navbar-inverse navbar-static-top" role="navigation">
   <div class="container">
-    <a href="/" class="navbar-brand active"><i class="fa fa-lg fa-fw fa-home"></i> <%= siteName %></a>
+    <a href="/" class="navbar-brand" data-shortcut-key="h"><i class="fa fa-lg fa-fw fa-home"></i> <%= siteName %></a>
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -51,19 +51,19 @@
             <i class="fa fa-fw fa-caret-down"></i>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="/profile"><span class="fa fa-lg fa-fw fa-user"></span> Profile</a></li>
+            <li><a href="/profile" data-shortcut-key="p"><span class="fa fa-lg fa-fw fa-user"></span> Profile</a></li>
             <li class="divider"></li><li><a href="/logout"><span class="fa fa-lg fa-fw fa-sign-out"></span> Logout</a></li>
           </ul>
         </li>
         <% } else { %>
-        <li><a href="/login" data-toggle="modal" data-target="#loginModal"><i class="fa fa-lg fa-fw fa-sign-in"></i> Log in</a></li>
-        <li><a href="/signup" data-toggle="modal" data-target="#signupModal"><i class="fa fa-lg fa-fw fa-user-plus"></i> Sign up</a></li>
+        <li><a href="/login" data-toggle="modal" data-dismiss="modal" data-target="#loginModal"><i class="fa fa-lg fa-fw fa-sign-in"></i> Log in</a></li>
+        <li><a href="/signup" data-toggle="modal" data-dismiss="modal" data-target="#signupModal"><i class="fa fa-lg fa-fw fa-user-plus"></i> Sign up</a></li>
         <% } %>
       </ul>
       <% if (user) { %>        
-        <a class="navbar-btn navbar-right btn btn-success" href="/post/new" data-toggle="modal" data-target="#newPostModal"><i class="fa fa-lg fa-fw fa-plus"></i> New Post</a>
+        <a class="navbar-btn navbar-right btn btn-success" href="/post/new" data-dismiss="modal" data-toggle="modal" data-target="#newPostModal" data-shortcut-key="n"><i class="fa fa-lg fa-fw fa-plus"></i> New Post</a>
       <% } else { %>
-        <a class="navbar-btn navbar-right btn btn-success" href="/login" data-toggle="modal" data-target="#loginModal"><i class="fa fa-lg fa-fw fa-plus"></i> New Post</a>
+        <a class="navbar-btn navbar-right btn btn-success" href="/login" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"><i class="fa fa-lg fa-fw fa-plus"></i> New Post</a>
       <% } %>
     </div>
   </div>

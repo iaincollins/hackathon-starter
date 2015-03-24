@@ -5,7 +5,7 @@
     <% if (typeof(user) != 'undefined' && user.id == post.creator.id) { %>
     <br/>
     <p class="text-right">
-      <a href="/post/edit/<%= post.id %>" class="btn btn-default"><i class="fa fa-lg fa-fw fa-pencil"></i> Edit</a>
+      <a href="/post/edit/<%= post.id %>" class="btn btn-default" data-shortcut-key="e"><i class="fa fa-lg fa-fw fa-pencil"></i> Edit</a>
     </p>
     <% } %>
   </div>
