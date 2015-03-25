@@ -144,7 +144,8 @@ var routes = {
   about: require('./routes/about'),
   contact : require('./routes/contact'),
   theme: require('./routes/theme'),
-  post: require('./routes/post')
+  post: require('./routes/post'),
+  search: require('./routes/search')
 };
 
 app.use(function(req, res, next) {
@@ -167,7 +168,7 @@ app.use(function(req, res, next) {
  * Main routes.
  */
 app.get('/', routes.home.index);
-app.get('/about', routes.about.index);
+app.get('/about', routes.about.getAbout);
 app.get('/login', routes.user.getLogin);
 app.post('/login', routes.user.postLogin);
 app.post('/theme', routes.theme.postTheme);
@@ -193,6 +194,7 @@ app.post('/post/new', routes.passport.isAuthenticated, routes.post.postNewPost);
 app.get('/post/edit/:id', routes.passport.isAuthenticated, routes.post.getEditPost);
 app.post('/post/edit/:id', routes.passport.isAuthenticated, routes.post.postEditPost);
 app.get('/post/:id', routes.post.getPost);
+app.get('/search', routes.search.getSearch);
 
 /**
  * OAuth sign-in routes.

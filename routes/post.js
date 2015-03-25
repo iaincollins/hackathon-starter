@@ -11,8 +11,8 @@ exports.getNewPost = function(req, res) {
  * POST /post/new
  */
 exports.postNewPost = function(req, res, next) {
-  req.assert('title', 'The title cannot be blank').notEmpty();
-  req.assert('body', 'The detail cannot be blank').notEmpty();
+  req.assert('title', 'Title cannot be blank').notEmpty();
+  req.assert('description', 'Description cannot be blank').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -26,7 +26,7 @@ exports.postNewPost = function(req, res, next) {
 
   var post = new Post({
     title: req.body.title,
-    body: req.body.body,
+    description: req.body.description,
     creator: {
       id: req.user.id,
       name: req.user.profile.name,
@@ -37,7 +37,7 @@ exports.postNewPost = function(req, res, next) {
   post.save(function(err) {
     if (err) return next(err);
     // @todo go to new post URL
-    return res.redirect('/post/'+post.id);  
+    return res.redirect('/post/'+post.id);
   });
 
 };
@@ -103,9 +103,9 @@ exports.getEditPost = function(req, res) {
  * POST /post/edit/:id
  */
 exports.postEditPost = function(req, res) {
-  req.assert('id', 'The post ID cannot be blank').notEmpty();
-  req.assert('title', 'The title cannot be blank').notEmpty();
-  req.assert('body', 'The detail cannot be blank').notEmpty();
+  req.assert('id', 'Post ID cannot be blank').notEmpty();
+  req.assert('title', 'Title cannot be blank').notEmpty();
+  req.assert('description', 'Description cannot be blank').notEmpty();
 
   var errors = req.validationErrors();
 
@@ -127,7 +127,7 @@ exports.postEditPost = function(req, res) {
       return res.render('403');
     
     post[0].title = req.body.title;
-    post[0].body = req.body.body;
+    post[0].description = req.body.description;
 
     post[0].save(function(err) {
       if (err) return next(err);

@@ -18,6 +18,8 @@
 
 module.exports = {
 
+  // Reset the DB on the command line with: 
+  // > mongo test --eval "db.dropDatabase()"
   db: process.env.MONGODB|| 'mongodb://localhost:27017/test',
 
   sessionSecret: process.env.SESSION_SECRET || 'caa089a139d5c94d76db043440055a610989d9b0',

@@ -1,15 +1,17 @@
 var mongoose = require('mongoose'),
-    autoIncrement = require('mongoose-auto-increment'),
+    mongooseAutoIncrement = require('mongoose-auto-increment'),
+    mongooseSearch = require('mongoose-search-plugin'),
     crypto = require('crypto');
 
 var config = {
   secrets: require('../config/secrets')
 };
 
-var postSchema = new mongoose.Schema({
+var schema = new mongoose.Schema({
   id: Number,
   title: { type: String, required : true },
-  body: { type: String, required : true },
+  description: { type: String, required : true },
+  tags: [String],
   date: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   
@@ -23,7 +25,7 @@ var postSchema = new mongoose.Schema({
 /**
  * Update the date on a post when it is modifeid
  */
-postSchema.pre('save', function(next) {
+schema.pre('save', function(next) {
   if (this.isNew) {
     next();
   } else {
@@ -35,7 +37,7 @@ postSchema.pre('save', function(next) {
 /**
  * Get URL to the creators gravatar.
  */
-postSchema.methods.creatorGravatar = function(size) {
+schema.methods.creatorGravatar = function(size) {
   if (!size) size = 200;
 
   if (!this.creator.email) {
@@ -46,12 +48,20 @@ postSchema.methods.creatorGravatar = function(size) {
   return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
 };
 
+/**
+ * Auto-incrimenting ID value (in addition to _id property)
+  */
 var connection = mongoose.createConnection(config.secrets.db); 
-autoIncrement.initialize(connection);
-postSchema.plugin(autoIncrement.plugin, {
+mongooseAutoIncrement.initialize(connection);
+schema.plugin(mongooseAutoIncrement.plugin, {
     model: 'Post',
     field: 'id',
     startAt: 1
 });
 
-module.exports = mongoose.model('Post', postSchema);
+
+schema.plugin(mongooseSearch, {
+  fields: ['title', 'description', 'tags']
+});
+  
+module.exports = mongoose.model('Post', schema);

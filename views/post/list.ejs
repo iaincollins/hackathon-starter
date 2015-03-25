@@ -1,7 +1,15 @@
-<h1 class="page-header">View posts</h1>
+<div class="row">
+  <div class="col-sm-12">
+    <h1 class="page-header">View posts
+      <form name="search-posts" method="get" action="/search" class="pull-right">
+        <div class="form-group">
+            <input name="q" value="" type="text" class="form-control" placeholder="Search" />
+        </div>
+      </form>
+    </h1>
+  </div>
+</div>
 <% if (postCount > 0) { %>
-<div xclass="panel panel-default">
-  <!-- Default panel contents -->
   <% include ../partials/posts-pagination %>
   <table class="table table-striped">
     <tbody>
@@ -17,15 +25,14 @@
             <%= post.creator.name || "Anonymous" %>
           </span>
         </td>
-        <td class="col-xs-5 col-sm-4 col-md-3 text-right text-muted">
+        <td class="col-xs-5 col-sm-4 col-md-3 text-muted text-right" style="vertical-align: middle;">
           <i class="fa fa-lg fa-fw fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time>
-        </td>        
+        </td>
       </tr>
     <% }) %>
     </tbody>
   </table>
   <% include ../partials/posts-pagination %>
-</div>
 <% } else { %>
   <p class="lead">There are no posts yet.</p>
   <p><a class="btn btn-success" href="/post/new"><i class="fa fa-lg fa-fw fa-plus"></i> Create a new post</a></p>

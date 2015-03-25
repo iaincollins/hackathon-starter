@@ -1,0 +1,39 @@
+<h1 class="page-header">Search</h1>
+<form name="search-posts" method="get" action="/search" class="form-horizontal">
+  <div class="form-group">
+    <div class="col-sm-4 col-sm-offset-3">
+      <input name="q" value="<%= query %>" type="text" class="form-control" placeholder="Search" />
+    </div>
+    <div class="col-sm-2">
+      <input type="submit" name="Search" class="btn btn-primary" />
+    </div>
+  </div>
+</form>
+<% if (query) { %>
+<div class="row">
+  <div class="col-sm-offset-1 col-sm-10">
+    <p class="lead"><%= count %> search results for "<%= query %>"</p>
+    <table class="table table-striped">
+      <tbody>
+      <% results.forEach(function(post) { %>
+        <tr>
+          <td class="col-xs-7 col-sm-8 col-md-9">
+            <span>
+              <h4 style="display: inline-block;"><a href="/post/<%= post.id %>"><i class="fa fa-fw fa-file-text-o"></i></a> <a href="/post/<%= post.id %>"><%= post.title %></a></h4>
+            </span>
+            <span class="text-muted">by</span>
+            <span>
+              <img src="<%= post.creatorGravatar(20) %>" alt="Avatar" hspace="3" class="img-circle" />
+              <%= post.creator.name || "Anonymous" %>
+            </span>
+          </td>
+          <td class="col-xs-5 col-sm-4 col-md-3 text-muted text-right" style="vertical-align: middle;">
+            <i class="fa fa-lg fa-fw fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% } %>
