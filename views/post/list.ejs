@@ -23,7 +23,7 @@
       <tr>
         <td class="col-xs-7 col-sm-8 col-md-9">
           <span>
-            <h4 style="display: inline-block;"><a href="/post/<%= post.id %>"><i class="fa fa-fw fa-file-text-o"></i></a> <a href="/post/<%= post.id %>"><%= post.title %></a></h4>
+            <h4 style="display: inline-block;"><a href="<%= post.getUrl() %>"><i class="fa fa-fw fa-file-text-o"></i></a> <a href="<%= post.getUrl() %>"><%= post.title %></a></h4>
           </span>
           <span class="text-muted">by</span>
           <span>

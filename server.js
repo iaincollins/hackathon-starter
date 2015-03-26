@@ -106,7 +106,7 @@ app.use(function(req, res, next) {
   app.locals.siteName = config.app.name;
   app.locals.title = config.app.name
 
-  // Make user object available in templates.  
+  // Make user object available in templates.
   res.locals.user = req.user;
   
   // Export selected theme to all templates (so can be used in layout)
@@ -194,6 +194,7 @@ app.get('/post/new', routes.passport.isAuthenticated, routes.post.getNewPost);
 app.post('/post/new', routes.passport.isAuthenticated, routes.post.postNewPost);
 app.get('/post/edit/:id', routes.passport.isAuthenticated, routes.post.getEditPost);
 app.post('/post/edit/:id', routes.passport.isAuthenticated, routes.post.postEditPost);
+app.get('/post/:id/:slug', routes.post.getPost);
 app.get('/post/:id', routes.post.getPost);
 app.get('/search', routes.search.getSearch);
 

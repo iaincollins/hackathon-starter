@@ -36,8 +36,7 @@ exports.postNewPost = function(req, res, next) {
 
   post.save(function(err) {
     if (err) return next(err);
-    // @todo go to new post URL
-    return res.redirect('/post/'+post.id);
+    return res.redirect(post.getUrl());
   });
 
 };
@@ -69,13 +68,14 @@ exports.getPosts = function(req, res) {
  * GET /post/:id
  */
 exports.getPost = function(req, res) {
+  console.log("yep");
   var postId = req.params.id;
 
-  Post.find({ id: postId }, function (err, post) {    
-    if (post.length == 0)      
+  Post.findOne({ id: postId }, function (err, post) {
+    if (err)
       return res.render('404');
     
-    return res.render('post/view', { title: res.locals.title + " - " + post.title, post: post[0] });
+    return res.render('post/view', { title: res.locals.title + " - " + post.title, post: post });
   });
 };
 
@@ -86,16 +86,16 @@ exports.getPost = function(req, res) {
 exports.getEditPost = function(req, res) {
   var postId = req.params.id;
 
-  Post.find({ id: postId }, function (err, post) {
-    if (post.length == 0)
+  Post.findOne({ id: postId }, function (err, post) {
+    if (err)
       return res.render('404');
 
-    if (req.user.id != post[0].creator.id 
+    if (req.user.id != post.creator.id 
         && req.user.permissions.moderator != true
         && req.user.permissions.admin != true )
       return res.render('403');
     
-    return res.render('post/edit', { title: res.locals.title + " - Edit " + post.title, post: post[0] });
+    return res.render('post/edit', { title: res.locals.title + " - Edit " + post.title, post: post });
   });
 };
 
@@ -117,22 +117,21 @@ exports.postEditPost = function(req, res) {
     return res.render('new/post');
   }
   
-  Post.find({ id: req.params.id }, function (err, post) {    
-    if (post.length == 0)      
+  Post.findOne({ id: req.params.id }, function (err, post) {
+    if (err)
       return res.render('404');
     
-    if (req.user.id != post[0].creator.id 
+    if (req.user.id != post.creator.id 
         && req.user.permissions.moderator != true
         && req.user.permissions.admin != true )
       return res.render('403');
     
-    post[0].title = req.body.title;
-    post[0].description = req.body.description;
+    post.title = req.body.title;
+    post.description = req.body.description;
 
-    post[0].save(function(err) {
+    post.save(function(err) {
       if (err) return next(err);
-      // @todo go to new post URL
-      return res.render('post/view', { title: res.locals.title + " - " + post.title, post: post[0] });
+      return res.redirect(post.getUrl());
     });
       
   });

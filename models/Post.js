@@ -1,7 +1,8 @@
 var mongoose = require('mongoose'),
     mongooseAutoIncrement = require('mongoose-auto-increment'),
     mongooseSearch = require('mongoose-search-plugin'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    slug = require('slug');
 
 var config = {
   secrets: require('../config/secrets')
@@ -46,6 +47,10 @@ schema.methods.creatorGravatar = function(size) {
 
   var md5 = crypto.createHash('md5').update(this.creator.email).digest('hex');
   return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
+};
+
+schema.methods.getUrl = function() {
+  return '/post/'+this.id+'/'+slug(this.title.toLowerCase());
 };
 
 /**
