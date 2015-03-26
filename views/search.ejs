@@ -1,11 +1,11 @@
 <h1 class="page-header">Search</h1>
 <form name="search-posts" method="get" action="/search" class="form-horizontal">
   <div class="form-group">
-    <div class="col-sm-4 col-sm-offset-3">
+    <div class="input-group col-sm-offset-3 col-sm-6"> 
       <input name="q" value="<%= query %>" type="text" class="form-control" placeholder="Search" />
-    </div>
-    <div class="col-sm-2">
-      <input type="submit" name="Search" class="btn btn-primary" />
+      <div class="input-group-btn">
+        <input type="submit" name="search" value="Search" class="btn btn-primary" />
+      </div>
     </div>
   </div>
 </form>
