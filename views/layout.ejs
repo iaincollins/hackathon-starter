@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <title><%= title %></title>
     <link rel="shortcut icon" href="/favicon.ico"/>
-    <link href="/css/main.min.css" rel="stylesheet"/>
+    <%- css('main') %>
     <% if (theme) { %><link id="boostrap-theme" href="<%= theme %>" rel="stylesheet"/><% } %>
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -17,9 +17,9 @@
     <script>
       document.documentElement.className = document.documentElement.className.replace("no-js","js");
     </script>
-    <script src="/js/jquery.js"></script>
-    <script src="/js/jquery-ui.js"></script>
-    <script src="/js/bootstrap.js"></script>
+    <%- js('jquery') %>
+    <%- js('jquery-ui') %>
+    <%- js('bootstrap') %>
   </head>
   <body>
     <% include partials/navbar %>
@@ -27,17 +27,22 @@
       <% include partials/flash %>
       <%- body %>
     </div>
+    
+    <%
+      // @todo Sign in dialogs should be loaded via AJAX
+    %>
+    
     <% if (user) { %>
       <% include partials/new-post-dialog %>
     <% } else { %>
       <% include partials/sign-in-dialogs %>
     <% } %>
     
-    <script src="/js/app.js"></script>
-    <script src="/js/validator.js"></script>
-    <script src="/js/jquery.timeago.js"></script>
-    <script src="/js/jquery.bootstrap-growl.js"></script>
-    <script src="/js/bootstrap.select.js"></script>
-    </script>
+    <%- js('application') %>
+    <%- js('validator') %>
+    <%- js('jquery.timeago') %>
+    <%- js('jquery.bootstrap-growl') %>
+    <%- js('bootstrap.select') %>
+  </script>
   </body>
 </html>

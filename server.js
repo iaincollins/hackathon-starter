@@ -102,8 +102,9 @@ app.use(function(req, res, next) {
 });
 app.use(function(req, res, next) {
 
-  res.locals.siteName = config.app.name;
-  res.locals.title = config.app.name;
+  // Expose site name globally
+  app.locals.siteName = config.app.name;
+  app.locals.title = config.app.name
 
   // Make user object available in templates.  
   res.locals.user = req.user;
