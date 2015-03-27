@@ -21,12 +21,13 @@ exports.postNewPost = function(req, res, next) {
   
   if (errors) {
     req.flash('errors', errors);
-    return res.render('new/post');
+    return res.render('post/new');
   }
 
   var post = new Post({
     title: req.body.title,
     description: req.body.description,
+    tags: splitTags(req.body.tags),
     creator: {
       id: req.user.id,
       name: req.user.profile.name,
@@ -68,7 +69,6 @@ exports.getPosts = function(req, res) {
  * GET /post/:id
  */
 exports.getPost = function(req, res) {
-  console.log("yep");
   var postId = req.params.id;
 
   Post.findOne({ id: postId }, function (err, post) {
@@ -107,6 +107,7 @@ exports.postEditPost = function(req, res) {
   req.assert('title', 'Title cannot be blank').notEmpty();
   req.assert('description', 'Description cannot be blank').notEmpty();
 
+  
   var errors = req.validationErrors();
 
   if (req.headers['x-validate'])
@@ -114,7 +115,7 @@ exports.postEditPost = function(req, res) {
   
   if (errors) {
     req.flash('errors', errors);
-    return res.render('new/post');
+    return res.redirect('back');
   }
   
   Post.findOne({ id: req.params.id }, function (err, post) {
@@ -128,7 +129,8 @@ exports.postEditPost = function(req, res) {
     
     post.title = req.body.title;
     post.description = req.body.description;
-
+    post.tags = splitTags(req.body.tags);
+    
     post.save(function(err) {
       if (err) return next(err);
       return res.redirect(post.getUrl());
@@ -138,3 +140,9 @@ exports.postEditPost = function(req, res) {
   
 };
 
+function splitTags(str) {
+  if (!str || str.trim() == '')
+    return [];
+  
+  return str.match(/(".*?"|[^",]+)+(?=,*|,*$)/g).map(function(s) { return s.trim().replace(/(^\"|\"$)/g, '').trim() })
+};

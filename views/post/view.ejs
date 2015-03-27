@@ -2,6 +2,11 @@
 <div class="row">
   <div class="col-sm-9">
     <p class="lead"><%= post.description %></p>
+    <p class="lead">
+    <% post.tags.forEach(function(tag) { %>
+      <span class="label label-default"><i class="fa fa-tag"></i> <%= tag %></span>
+    <% }); %>
+    </p>
     <% if (typeof(user) != 'undefined' && user.id == post.creator.id) { %>
     <br/>
     <p class="text-right">
