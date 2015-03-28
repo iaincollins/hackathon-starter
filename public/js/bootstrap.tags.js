@@ -22,7 +22,7 @@
     onTagExists: function(item, $tag) {
       $tag.hide().fadeIn();
     },
-    trimValue: false,
+    trimValue: true,
     allowDuplicates: false
   };
 
@@ -126,7 +126,6 @@
       self.itemsArray.push(item);
 
       // add a tag element
-
       var $tag = $('<span class="tag ' + htmlEncode(tagClass) + (itemTitle !== null ? ('" title="' + itemTitle) : '') + '"><i class="fa fa-tag"></i> ' + htmlEncode(itemText) + ' <span data-role="remove" class="small"><i class="fa fa-times-circle"></i></span></span>');
       $tag.data('item', item);
       self.findInputWrapper().before($tag);
