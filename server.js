@@ -102,9 +102,11 @@ app.use(function(req, res, next) {
 });
 app.use(function(req, res, next) {
 
-  // Expose site name globally
-  app.locals.siteName = config.app.name;
-  app.locals.title = config.app.name
+  // Set default page title based on app name
+  res.locals.title = config.app.name;
+  
+  // Expose site config details to templates
+  res.locals.site = config.app;
 
   // Make user object available in templates.
   res.locals.user = req.user;
@@ -145,8 +147,7 @@ var routes = {
   about: require('./routes/about'),
   contact : require('./routes/contact'),
   theme: require('./routes/theme'),
-  post: require('./routes/post'),
-  search: require('./routes/search')
+  posts: require('./routes/posts')
 };
 
 app.use(function(req, res, next) {
@@ -189,14 +190,14 @@ app.post('/account/profile', routes.passport.isAuthenticated, routes.user.postUp
 app.post('/account/password', routes.passport.isAuthenticated, routes.user.postUpdatePassword);
 app.post('/account/delete', routes.passport.isAuthenticated, routes.user.postDeleteAccount);
 app.get('/account/unlink/:provider', routes.passport.isAuthenticated, routes.user.getOauthUnlink);
-app.get('/posts', routes.post.getPosts);
-app.get('/post/new', routes.passport.isAuthenticated, routes.post.getNewPost);
-app.post('/post/new', routes.passport.isAuthenticated, routes.post.postNewPost);
-app.get('/post/edit/:id', routes.passport.isAuthenticated, routes.post.getEditPost);
-app.post('/post/edit/:id', routes.passport.isAuthenticated, routes.post.postEditPost);
-app.get('/post/:id/:slug', routes.post.getPost);
-app.get('/post/:id', routes.post.getPost);
-app.get('/search', routes.search.getSearch);
+app.get('/'+config.app.posts, routes.posts.getPosts);
+app.get('/'+config.app.posts+'/new', routes.passport.isAuthenticated, routes.posts.getNewPost);
+app.post('/'+config.app.posts+'/new', routes.passport.isAuthenticated, routes.posts.postNewPost);
+app.get('/'+config.app.posts+'/search', routes.posts.getSearch);
+app.get('/'+config.app.posts+'/edit/:id', routes.passport.isAuthenticated, routes.posts.getEditPost);
+app.post('/'+config.app.posts+'/edit/:id', routes.passport.isAuthenticated, routes.posts.postEditPost);
+app.get('/'+config.app.posts+'/:id/:slug', routes.posts.getPost);
+app.get('/'+config.app.posts+'/:id', routes.posts.getPost);
 
 /**
  * OAuth sign-in routes.

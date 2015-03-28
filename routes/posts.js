@@ -1,14 +1,14 @@
 var Post = require('../models/Post');
 
 /**
- * GET /post/new
+ * GET /posts/new
  */
 exports.getNewPost = function(req, res) {  
-  res.render('post/new', { title: res.locals.title + " - New post" });
+  res.render('posts/new', { title: res.locals.title + " - New post" });
 };
 
 /**
- * POST /post/new
+ * POST /posts/new
  */
 exports.postNewPost = function(req, res, next) {
   req.assert('title', 'Title cannot be blank').notEmpty();
@@ -21,7 +21,7 @@ exports.postNewPost = function(req, res, next) {
   
   if (errors) {
     req.flash('errors', errors);
-    return res.render('post/new');
+    return res.render('posts/new');
   }
 
   var post = new Post({
@@ -59,14 +59,14 @@ exports.getPosts = function(req, res) {
   
   Post.find({}, null , { skip: skip, limit: numberOfResults, sort : { _id: -1 } }).exec(function (err, posts) {
     Post.count({}, function( err, count) {
-        res.render('post/list', { title: res.locals.title + " - Posts", posts: posts, postCount: count, postLimit: numberOfResults, page: pageNumber });
+        res.render('posts/list', { title: res.locals.title + " - Posts", posts: posts, postCount: count, postLimit: numberOfResults, page: pageNumber });
     });
   });
   
 };
 
 /**
- * GET /post/:id
+ * GET /posts/:id
  */
 exports.getPost = function(req, res) {
   var postId = req.params.id;
@@ -75,13 +75,13 @@ exports.getPost = function(req, res) {
     if (err)
       return res.render('404');
     
-    return res.render('post/view', { title: res.locals.title + " - " + post.title, post: post });
+    return res.render('posts/view', { title: res.locals.title + " - " + post.title, post: post });
   });
 };
 
 
 /**
- * GET /post/edit/:id
+ * GET /posts/edit/:id
  */
 exports.getEditPost = function(req, res) {
   var postId = req.params.id;
@@ -95,19 +95,18 @@ exports.getEditPost = function(req, res) {
         && req.user.permissions.admin != true )
       return res.render('403');
     
-    return res.render('post/edit', { title: res.locals.title + " - Edit " + post.title, post: post });
+    return res.render('posts/edit', { title: res.locals.title + " - Edit " + post.title, post: post });
   });
 };
 
 /**
- * POST /post/edit/:id
+ * POST /posts/edit/:id
  */
 exports.postEditPost = function(req, res) {
   req.assert('id', 'Post ID cannot be blank').notEmpty();
   req.assert('title', 'Title cannot be blank').notEmpty();
   req.assert('description', 'Description cannot be blank').notEmpty();
 
-  
   var errors = req.validationErrors();
 
   if (req.headers['x-validate'])
@@ -137,6 +136,28 @@ exports.postEditPost = function(req, res) {
     });
       
   });
+  
+};
+
+/**
+ * GET /posts/search
+ */
+exports.getSearch = function(req, res) {
+  
+  if (req.query.q) {
+    Post.search(req.query.q, {}, { sort: { date: -1 }, limit: 50 }, function(err, data) {
+          res.render('posts/search', { title: res.locals.title + " - Search",
+                                 query: req.query.q,
+                                 results: data.results,
+                                 count: data.totalCount
+                               });
+      });
+  } else {
+    res.render('posts/search', { title: res.locals.title + " - Search",
+                           query: '',
+                           results: []
+                         });
+  }
   
 };
 

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-12">
     <h1 class="page-header">
-      <form name="search-posts" method="get" action="/search" class="form-horizontal">
+      <form name="search-posts" method="get" action="/<%= site.posts %>/search" class="form-horizontal">
         <div class="form-group col-sm-3 pull-right">
           <div class="input-group"> 
             <input name="q" value="" type="text" class="form-control" placeholder="Search" />
@@ -11,7 +11,7 @@
           </div>
         </div>
       </form>
-      View posts
+      Browse
     </h1>
   </div>
 </div>
@@ -41,5 +41,5 @@
   <% include ../partials/posts-pagination %>
 <% } else { %>
   <p class="lead">There are no posts yet.</p>
-  <p><a class="btn btn-success" href="/post/new"><i class="fa fa-lg fa-fw fa-plus"></i> Create a new post</a></p>
+  <p><a class="btn btn-success" href="/<%= site.posts %>/new"><i class="fa fa-lg fa-fw fa-plus"></i> Create a new post</a></p>
 <% } %>

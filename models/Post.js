@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
     slug = require('slug');
 
 var config = {
+  app: require('../config/app'),
   secrets: require('../config/secrets')
 };
 
@@ -50,8 +51,13 @@ schema.methods.creatorGravatar = function(size) {
 };
 
 schema.methods.getUrl = function() {
-  return '/post/'+this.id+'/'+slug(this.title.toLowerCase());
+  return '/'+config.app.posts+'/'+this.id+'/'+slug(this.title.toLowerCase());
 };
+
+schema.methods.getEditUrl = function() {
+  return '/'+config.app.posts+'/edit/'+this.id;
+};
+
 
 /**
  * Auto-incrimenting ID value (in addition to _id property)

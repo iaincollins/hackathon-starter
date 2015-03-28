@@ -1,6 +1,6 @@
 <div class="navbar navbar-inverse navbar-static-top" role="navigation">
   <div class="container">
-    <a href="/" class="navbar-brand" data-shortcut-key="h"><i class="fa fa-lg fa-fw fa-home"></i> <%= siteName %></a>
+    <a href="/" class="navbar-brand" data-shortcut-key="h"><i class="fa fa-lg fa-fw fa-home"></i> <%= site.name %></a>
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -41,7 +41,7 @@
         </div>
       </form>
       <ul class="nav navbar-right navbar-nav">
-        <li><a href="/posts" ><i class="fa fa-lg fa-fw fa-list"></i> View Posts</a></li>
+        <li><a href="/<%= site.posts %>" ><i class="fa fa-lg fa-fw fa-list"></i> View Posts</a></li>
         <li><a href="/contact"><i class="fa fa-lg fa-fw fa-phone"></i> Contact</a></li>
         <% if (user) { %>
         <li class="dropdown">
@@ -61,7 +61,7 @@
         <% } %>
       </ul>
       <% if (user) { %>        
-        <a class="navbar-btn navbar-right btn btn-success" href="/post/new" data-dismiss="modal" data-toggle="modal" data-target="#newPostModal" data-shortcut-key="n"><i class="fa fa-lg fa-fw fa-plus"></i> New Post</a>
+        <a class="navbar-btn navbar-right btn btn-success" href="/<%= site.posts %>/new" data-dismiss="modal" data-toggle="modal" data-target="#newPostModal" data-shortcut-key="n"><i class="fa fa-lg fa-fw fa-plus"></i> New</a>
       <% } else { %>
         <a class="navbar-btn navbar-right btn btn-success" href="/login" data-dismiss="modal" data-toggle="modal" data-target="#loginModal"><i class="fa fa-lg fa-fw fa-plus"></i> New Post</a>
       <% } %>
