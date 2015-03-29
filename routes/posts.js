@@ -92,7 +92,7 @@ exports.getEditPost = function(req, res) {
 
     if (req.user.id != post.creator.id 
         && req.user.permissions.moderator != true
-        && req.user.permissions.admin != true )
+        && req.user.permissions.admin != true)
       return res.render('403');
     
     return res.render('posts/edit', { title: res.locals.title + " - Edit " + post.title, post: post });
@@ -123,7 +123,7 @@ exports.postEditPost = function(req, res) {
     
     if (req.user.id != post.creator.id 
         && req.user.permissions.moderator != true
-        && req.user.permissions.admin != true )
+        && req.user.permissions.admin != true)
       return res.render('403');
     
     post.title = req.body.title;
