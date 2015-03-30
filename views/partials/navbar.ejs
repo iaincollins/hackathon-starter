@@ -46,7 +46,7 @@
         <% if (user) { %>
         <li class="dropdown">
           <a href="/profile" data-toggle="dropdown" class="dropdown-toggle">
-            <img src="<%= user.profile.picture || user.gravatar(30) %>" alt="Avatar" class="img-circle" style="position: relative; top: -2px; height: 30px; width: 30px; margin: -15px 5px;"  />
+            <img src="<%= user.avatar(30) %>" alt="Avatar" class="img-circle" style="position: relative; top: -2px; height: 30px; width: 30px; margin: -15px 5px;"  />
             <%= user.profile.name || user.email || user.id %>
             <i class="fa fa-fw fa-caret-down"></i>
           </a>

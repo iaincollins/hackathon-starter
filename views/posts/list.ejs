@@ -27,8 +27,8 @@
           </span>
           <span class="text-muted">by</span>
           <span>
-            <img src="<%= post.creatorGravatar(20) %>" alt="Avatar" hspace="3" class="img-circle" />
-            <%= post.creator.name || "Anonymous" %>
+            <img src="<%= post.creator.avatar(32) %>" alt="Avatar" height="32" width="32" hspace="3" class="img-circle" />
+            <%= post.creator.profile.name || "Anonymous" %>
           </span>
         </td>
         <td class="col-xs-5 col-sm-4 col-md-3 text-muted text-right" style="vertical-align: middle;">

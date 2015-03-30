@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     mongooseAutoIncrement = require('mongoose-auto-increment'),
     mongooseSearch = require('mongoose-search-plugin'),
+    User = require('./User'),
     crypto = require('crypto'),
     slug = require('slug');
 
@@ -10,18 +11,13 @@ var config = {
 };
 
 var schema = new mongoose.Schema({
-  postId: Number,
+  postId: { type: Number, unique: true },
   title: { type: String, required : true },
   description: { type: String, required : true },
   tags: [String],
   date: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  //{ type: Schema.ObjectId, ref: 'Person' }
-  creator: {
-    id: { type: String, required : true },
-    name: { type: String, default: 'Anonymous' },
-    email: { type: String }
-  }
+  creator: { type: mongoose.Schema.ObjectId, ref: 'User' }
 });
 
 /**
@@ -35,20 +31,6 @@ schema.pre('save', function(next) {
     next();
   }
 });
-
-/**
- * Get URL to the creators gravatar.
- */
-schema.methods.creatorGravatar = function(size) {
-  if (!size) size = 200;
-
-  if (!this.creator.email) {
-    return 'https://gravatar.com/avatar/?s=' + size + '&d=retro';
-  }
-
-  var md5 = crypto.createHash('md5').update(this.creator.email).digest('hex');
-  return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
-};
 
 schema.methods.getUrl = function() {
   return '/'+config.app.posts+'/'+this.postId+'/'+slug(this.title.toLowerCase());

@@ -1,11 +1,17 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
-var crypto = require('crypto');
+var mongoose = require('mongoose'),
+  mongooseAutoIncrement = require('mongoose-auto-increment'),
+  bcrypt = require('bcrypt-nodejs'),
+  crypto = require('crypto');
+  
+var config = {
+  secrets: require('../config/secrets')
+};
+  
 
 var schema = new mongoose.Schema({
+  userId: { type: Number, unique: true },
   email: { type: String, unique: true, lowercase: true, required : true},
   password: String,
-  picture: String,
   
   facebook: String,
   twitter: String,
@@ -17,7 +23,8 @@ var schema = new mongoose.Schema({
     name: { type: String, default: '' },
     organization: { type: String, default: '' },
     location: { type: String, default: '' },
-    website: { type: String, default: '' }
+    website: { type: String, default: '' },
+    picture: String
   },
   
   permissions: {
@@ -66,10 +73,12 @@ schema.methods.comparePassword = function(candidatePassword, cb) {
 };
 
 /**
- * Get URL to a user's gravatar.
+ * Get URL to a user's avatar.
  * Used in Navbar and Account Management page.
  */
-schema.methods.gravatar = function(size) {
+
+schema.methods.avatar = function(size) {
+  // @todo Allow use of imported avatar as well as gravatar
   if (!size) size = 200;
 
   if (!this.email) {
@@ -79,5 +88,16 @@ schema.methods.gravatar = function(size) {
   var md5 = crypto.createHash('md5').update(this.email).digest('hex');
   return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
 };
+
+/**
+ * Auto-incrimenting ID value (in addition to _id property)
+  */
+var connection = mongoose.createConnection(config.secrets.db); 
+mongooseAutoIncrement.initialize(connection);
+schema.plugin(mongooseAutoIncrement.plugin, {
+    model: 'User',
+    field: 'userId',
+    startAt: 1
+});
 
 module.exports = mongoose.model('User', schema);

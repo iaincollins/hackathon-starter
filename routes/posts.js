@@ -1,4 +1,5 @@
-var Post = require('../models/Post');
+var Post = require('../models/Post'),
+    User = require('../models/Post');
 
 /**
  * GET /posts/new
@@ -28,11 +29,7 @@ exports.postNewPost = function(req, res, next) {
     title: req.body.title,
     description: req.body.description,
     tags: splitTags(req.body.tags),
-    creator: {
-      id: req.user.id,
-      name: req.user.profile.name,
-      email: req.user.email
-    }
+    creator: req.user.id
   });
 
   post.save(function(err) {
@@ -57,7 +54,10 @@ exports.getPosts = function(req, res) {
   if (pageNumber > 1)
     skip = (pageNumber - 1) * numberOfResults;    
   
-  Post.find({}, null , { skip: skip, limit: numberOfResults, sort : { _id: -1 } }).exec(function (err, posts) {
+  Post
+  .find({}, null , { skip: skip, limit: numberOfResults, sort : { _id: -1 } })
+  .populate('creator', 'profile email picture')
+  .exec(function (err, posts) {
     Post.count({}, function( err, count) {
         res.render('posts/list', { title: res.locals.title + " - Posts", posts: posts, postCount: count, postLimit: numberOfResults, page: pageNumber });
     });
@@ -70,8 +70,11 @@ exports.getPosts = function(req, res) {
  */
 exports.getPost = function(req, res) {
   var postId = req.params.id;
-
-  Post.findOne({ postId: postId }, function (err, post) {
+  
+  Post
+  .findOne({ postId: postId })
+  .populate('creator', 'profile email picture')
+  .exec(function (err, post) {
     if (err)
       return res.render('404');
     
@@ -86,7 +89,10 @@ exports.getPost = function(req, res) {
 exports.getEditPost = function(req, res) {
   var postId = req.params.id;
 
-  Post.findOne({ postId: postId }, function (err, post) {
+  Post
+  .findOne({ postId: postId })
+  .populate('creator', 'profile email picture')
+  .exec(function (err, post) {
     if (err)
       return res.render('404');
 
@@ -117,7 +123,10 @@ exports.postEditPost = function(req, res) {
     return res.redirect('back');
   }
   
-  Post.findOne({ postId: req.params.id }, function (err, post) {
+  Post
+  .findOne({ postId: req.params.id })
+  .populate('creator', 'profile email picture')
+  .exec(function (err, post) {
     if (err)
       return res.render('404');
     
@@ -145,18 +154,20 @@ exports.postEditPost = function(req, res) {
 exports.getSearch = function(req, res) {
   
   if (req.query.q) {
-    Post.search(req.query.q, {}, { sort: { date: -1 }, limit: 50 }, function(err, data) {
-          res.render('posts/search', { title: res.locals.title + " - Search",
-                                 query: req.query.q,
-                                 results: data.results,
-                                 count: data.totalCount
-                               });
+    Post
+    .search(req.query.q, {}, { sort: { date: -1 }, limit: 50, populate: [{ path: 'creator', fields: 'profile email picture'} ] },
+      function(err, data) {
+        res.render('posts/search', { title: res.locals.title + " - Search",
+                                     query: req.query.q,
+                                     results: data.results,
+                                     count: data.totalCount
+                                   });
       });
   } else {
     res.render('posts/search', { title: res.locals.title + " - Search",
-                           query: '',
-                           results: []
-                         });
+                                 query: '',
+                                 results: []
+                               });
   }
   
 };
