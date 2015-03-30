@@ -14,7 +14,7 @@ var schema = new mongoose.Schema({
   postId: { type: Number, unique: true },
   title: { type: String, required : true },
   description: { type: String, required : true },
-  tags: [String],
+  tags: [ String ],
   date: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   creator: { type: mongoose.Schema.ObjectId, ref: 'User' }

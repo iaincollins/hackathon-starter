@@ -11,6 +11,7 @@ var config = {
 var schema = new mongoose.Schema({
   userId: { type: Number, unique: true },
   email: { type: String, unique: true, lowercase: true, required : true},
+  verified:  { type: Boolean, default: false },
   password: String,
   
   facebook: String,
@@ -27,12 +28,8 @@ var schema = new mongoose.Schema({
     picture: String
   },
   
-  permissions: {
-    verified: { type: Boolean, default: false },
-    moderator: { type: Boolean, default: false },
-    admin: { type: Boolean, default: false }
-  },
-
+  role: { type: String, enum: ['ADMIN', 'MODERATOR', 'USER'], default: 'USER' },
+  
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   emailVerificationToken: String
@@ -45,19 +42,24 @@ var schema = new mongoose.Schema({
 
 schema.pre('save', function(next) {
   var user = this;
-  
-  if (!user.isModified('password')) return next();
-  
-  // @todo Handle updating posts when a user changes their email address
-  
-  bcrypt.genSalt(5, function(err, salt) {
-    if (err) return next(err);
 
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
+  // If there is is only one active user on the site, make them an administrator
+  var model = mongoose.model('User', schema).count({}, function(err, count) {
+    if (!err && count < 1)
+      user.role = 'ADMIN';
+
+    if (!user.isModified('password')) return next();
+  
+    bcrypt.genSalt(5, function(err, salt) {
       if (err) return next(err);
-      user.password = hash;
-      next();
+
+      bcrypt.hash(user.password, salt, null, function(err, hash) {
+        if (err) return next(err);
+        user.password = hash;
+        next();
+      });
     });
+    
   });
 });
 
@@ -92,7 +94,7 @@ schema.methods.avatar = function(size) {
 /**
  * Auto-incrimenting ID value (in addition to _id property)
   */
-var connection = mongoose.createConnection(config.secrets.db); 
+var connection = mongoose.createConnection(config.secrets.db);
 mongooseAutoIncrement.initialize(connection);
 schema.plugin(mongooseAutoIncrement.plugin, {
     model: 'User',

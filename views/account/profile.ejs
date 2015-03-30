@@ -21,31 +21,31 @@
               <div class="messages"></div>
               <input type="hidden" name="_csrf" value="<%= _csrf %>">
               <div class="form-group">
-                <label for="email" class="col-sm-3 control-label">Email</label>
+                <label for="email" class="col-sm-4 control-label">Email</label>
                 <div class="col-sm-7">
                   <input type="email" name="email" id="email" value="<%= (user.email.match(/\@unverified$/g)) ? '' : user.email %>" class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label for="name" class="col-sm-3 control-label">Name</label>
+                <label for="name" class="col-sm-4 control-label">Name</label>
                 <div class="col-sm-7">
                   <input type="text" name="name" id="name" value="<%= user.profile.name %>" class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label for="Gender" class="col-sm-3 control-label">Organization</label>
+                <label for="Gender" class="col-sm-4 control-label">Organization</label>
                 <div class="col-sm-7">
                   <input type="text" name="organization" id="organization" value="<%= user.profile.organization %>" class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label for="location" class="col-sm-3 control-label">Location</label>
+                <label for="location" class="col-sm-4 control-label">Location</label>
                 <div class="col-sm-7">
                   <input type="text" name="location" id="location" value="<%= user.profile.location %>" class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label for="website" class="col-sm-3 control-label">Website</label>
+                <label for="website" class="col-sm-4 control-label">Website</label>
                 <div class="col-sm-7">
                   <input type="text" name="website" id="website" value="<%= user.profile.website %>" class="form-control">
                 </div>
@@ -58,10 +58,10 @@
             </form>
           </div>
           
-          <div class="tab-pane" id="permissions">          
+          <div class="tab-pane" id="permissions">
             <h2>Permissions</h2>
             <br/>
-            <% if (user.permissions.verififed) { %>
+            <% if (user.verified) { %>
             <p class="text-success">
               <i class="fa fa-lg fa-fw fa-check-circle"></i> Email address verififed
             </p>
@@ -70,7 +70,7 @@
               <i class="fa fa-lg fa-fw fa-times-circle"></i> Email address not verififed
             </p>
             <% } %>
-            <% if (user.permissions.moderator) { %>
+            <% if (user.role == 'ADMIN' || user.role == 'MODERATOR') { %>
             <p class="text-success">
               <i class="fa fa-lg fa-fw fa-check-circle"></i> You have moderator access 
             </p>
@@ -79,7 +79,7 @@
               <i class="fa fa-lg fa-fw fa-times-circle"></i> You do not have moderator access
             </p>
             <% } %>
-            <% if (user.permissions.admin) { %>
+            <% if (user.role == 'ADMIN') { %>
             <p class="text-success">
               <i class="fa fa-lg fa-fw fa-check-circle"></i> You have administrator access 
             </p>
@@ -97,14 +97,14 @@
               <div class="messages"></div>
               <input type="hidden" name="_csrf" value="<%= _csrf %>">
               <div class="form-group">
-                <label for="password" class="col-sm-4 control-label">New password</label>
-                <div class="col-sm-5">
+                <label for="password" class="col-sm-5 control-label">New password</label>
+                <div class="col-sm-6">
                   <input type="password" name="password" id="password" class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label for="confirmPassword" class="col-sm-4 control-label">Confirm password</label>
-                <div class="col-sm-5">
+                <label for="confirmPassword" class="col-sm-5 control-label">Confirm password</label>
+                <div class="col-sm-6">
                   <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
                 </div>
               </div>
@@ -120,7 +120,10 @@
             <h2>Delete your account</h2>
             <br/>
             <p>
-              You can delete your account at any time. If an account is deleted it cannot be restored.
+              You can delete your account at any time. 
+            </p>
+            <p>
+              If you delete your account, it cannot be restored.
             </p>
             <br/>
             <p>
@@ -128,7 +131,7 @@
             </p>
           </div>
           
-        </div>  <!-- End tabs -->      
+        </div>  <!-- End tabs -->
       </div>
 
       <div class="col-sm-5">
@@ -210,7 +213,7 @@
       </div>
       <div class="modal-body text-center">
         <br/>
-        <p class="lead">
+        <p>
           <strong><i class="fa fa-lg fa-warning"></i> Warning</strong> If you delete your account, it cannot be restored.
         </p>
         <br/>
@@ -218,7 +221,7 @@
       <div class="modal-footer">
         <form name="delete-account" method="post" action="/account/delete">
           <input type="hidden" name="_csrf" value="<%= _csrf %>">
-          <button type="submit" class="btn btn-danger"><i class="fa fa-fw fa-lg fa-trash"></i> DELETE ACCOUNT</button>
+          <button type="submit" class="btn btn-danger"><i class="fa fa-fw fa-lg fa-trash"></i>Delete my account</button>
         </form>
       </div>
     </div>        

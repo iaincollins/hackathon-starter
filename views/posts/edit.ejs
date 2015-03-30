@@ -27,6 +27,7 @@
     </form>
   </div>
   <div class="col-sm-3">
+    <% if (post.creator) { %>
     <div class="media">
       <div class="media-left">
         <a href="#"><img src="<%= post.creator.avatar(48) %>" height="48" width="48" alt="Avatar" class="img-circle"/></a>
@@ -36,6 +37,6 @@
         <span class="text-muted"><i class="fa fa-clock-o"></i> <time class="timeago" datetime="<%= post.date.toISOString() %>"><%= post.date.toDateString() %></time></span>
       </div>
     </div>
-    </h3>
   </div>
+  <% } %>
 </div>

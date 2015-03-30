@@ -56,9 +56,9 @@ exports.getPosts = function(req, res) {
   
   Post
   .find({}, null , { skip: skip, limit: numberOfResults, sort : { _id: -1 } })
-  .populate('creator', 'profile email picture')
+  .populate('creator', 'profile email picture role')
   .exec(function (err, posts) {
-    Post.count({}, function( err, count) {
+    Post.count({}, function(err, count) {
         res.render('posts/list', { title: res.locals.title + " - Posts", posts: posts, postCount: count, postLimit: numberOfResults, page: pageNumber });
     });
   });
@@ -73,7 +73,7 @@ exports.getPost = function(req, res) {
   
   Post
   .findOne({ postId: postId })
-  .populate('creator', 'profile email picture')
+  .populate('creator', 'profile email picture role')
   .exec(function (err, post) {
     if (err)
       return res.render('404');
@@ -91,14 +91,14 @@ exports.getEditPost = function(req, res) {
 
   Post
   .findOne({ postId: postId })
-  .populate('creator', 'profile email picture')
+  .populate('creator', 'profile email picture role')
   .exec(function (err, post) {
     if (err)
       return res.render('404');
 
-    if (req.user.id != post.creator.id 
-        && req.user.permissions.moderator != true
-        && req.user.permissions.admin != true)
+    if ((post.creator && req.user.id != post.creator.id)
+        && req.user.role != 'MODERATOR'
+        && req.user.role != 'ADMIN')
       return res.render('403');
     
     return res.render('posts/edit', { title: res.locals.title + " - Edit " + post.title, post: post });
@@ -125,14 +125,14 @@ exports.postEditPost = function(req, res) {
   
   Post
   .findOne({ postId: req.params.id })
-  .populate('creator', 'profile email picture')
+  .populate('creator', 'profile email picture role')
   .exec(function (err, post) {
     if (err)
       return res.render('404');
     
-    if (req.user.id != post.creator.id 
-        && req.user.permissions.moderator != true
-        && req.user.permissions.admin != true)
+    if ((post.creator && req.user.id != post.creator.id)
+        && req.user.role != 'MODERATOR'
+        && req.user.role != 'ADMIN')
       return res.render('403');
     
     post.title = req.body.title;
@@ -155,7 +155,7 @@ exports.getSearch = function(req, res) {
   
   if (req.query.q) {
     Post
-    .search(req.query.q, {}, { sort: { date: -1 }, limit: 50, populate: [{ path: 'creator', fields: 'profile email picture'} ] },
+    .search(req.query.q, {}, { sort: { date: -1 }, limit: 50, populate: [{ path: 'creator', fields: 'profile email picture role'} ] },
       function(err, data) {
         res.render('posts/search', { title: res.locals.title + " - Search",
                                      query: req.query.q,
