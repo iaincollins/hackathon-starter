@@ -10,13 +10,13 @@ var config = {
 };
 
 var schema = new mongoose.Schema({
-  id: Number,
+  postId: Number,
   title: { type: String, required : true },
   description: { type: String, required : true },
   tags: [String],
   date: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  
+  //{ type: Schema.ObjectId, ref: 'Person' }
   creator: {
     id: { type: String, required : true },
     name: { type: String, default: 'Anonymous' },
@@ -51,13 +51,12 @@ schema.methods.creatorGravatar = function(size) {
 };
 
 schema.methods.getUrl = function() {
-  return '/'+config.app.posts+'/'+this.id+'/'+slug(this.title.toLowerCase());
+  return '/'+config.app.posts+'/'+this.postId+'/'+slug(this.title.toLowerCase());
 };
 
 schema.methods.getEditUrl = function() {
-  return '/'+config.app.posts+'/edit/'+this.id;
+  return '/'+config.app.posts+'/edit/'+this.postId;
 };
-
 
 /**
  * Auto-incrimenting ID value (in addition to _id property)
@@ -66,10 +65,9 @@ var connection = mongoose.createConnection(config.secrets.db);
 mongooseAutoIncrement.initialize(connection);
 schema.plugin(mongooseAutoIncrement.plugin, {
     model: 'Post',
-    field: 'id',
+    field: 'postId',
     startAt: 1
 });
-
 
 schema.plugin(mongooseSearch, {
   fields: ['title', 'description', 'tags']

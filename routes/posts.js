@@ -71,7 +71,7 @@ exports.getPosts = function(req, res) {
 exports.getPost = function(req, res) {
   var postId = req.params.id;
 
-  Post.findOne({ id: postId }, function (err, post) {
+  Post.findOne({ postId: postId }, function (err, post) {
     if (err)
       return res.render('404');
     
@@ -86,7 +86,7 @@ exports.getPost = function(req, res) {
 exports.getEditPost = function(req, res) {
   var postId = req.params.id;
 
-  Post.findOne({ id: postId }, function (err, post) {
+  Post.findOne({ postId: postId }, function (err, post) {
     if (err)
       return res.render('404');
 
@@ -117,7 +117,7 @@ exports.postEditPost = function(req, res) {
     return res.redirect('back');
   }
   
-  Post.findOne({ id: req.params.id }, function (err, post) {
+  Post.findOne({ postId: req.params.id }, function (err, post) {
     if (err)
       return res.render('404');
     
