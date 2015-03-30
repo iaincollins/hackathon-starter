@@ -50,9 +50,9 @@
                   <input type="text" name="website" id="website" value="<%= user.profile.website %>" class="form-control">
                 </div>
               </div>
-              <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-7">
-                  <button type="submit" class="btn btn btn-primary">Save changes</button>
+              <div class="form-group text-right">
+                <div class="col-sm-offset-4 col-sm-7">
+                  <button type="submit" class="btn btn btn-primary"><i class="fa fa-check"></i> Save profile</button>
                 </div>
               </div>
             </form>
@@ -72,7 +72,7 @@
             <% } %>
             <% if (user.role == 'ADMIN' || user.role == 'MODERATOR') { %>
             <p class="text-success">
-              <i class="fa fa-lg fa-fw fa-check-circle"></i> You have moderator access 
+              <i class="fa fa-lg fa-fw fa-check-circle"></i> You have moderator access
             </p>
             <% } else { %>
             <p class="text-danger">
@@ -81,7 +81,7 @@
             <% } %>
             <% if (user.role == 'ADMIN') { %>
             <p class="text-success">
-              <i class="fa fa-lg fa-fw fa-check-circle"></i> You have administrator access 
+              <i class="fa fa-lg fa-fw fa-check-circle"></i> You have administrator access
             </p>
             <% } else { %>
             <p class="text-danger">
@@ -94,22 +94,22 @@
             <h2>Change your password</h2>
             <br/>
             <form action="/account/password" method="post" class="form-horizontal" data-validator="true">
+              <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
               <div class="messages"></div>
-              <input type="hidden" name="_csrf" value="<%= _csrf %>">
               <div class="form-group">
-                <label for="password" class="col-sm-5 control-label">New password</label>
-                <div class="col-sm-6">
+                <label for="password" class="col-sm-4 control-label">New password</label>
+                <div class="col-sm-7">
                   <input type="password" name="password" id="password" class="form-control">
                 </div>
               </div>
               <div class="form-group">
-                <label for="confirmPassword" class="col-sm-5 control-label">Confirm password</label>
-                <div class="col-sm-6">
+                <label for="confirmPassword" class="col-sm-4 control-label">Confirm password</label>
+                <div class="col-sm-7">
                   <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
                 </div>
               </div>
-              <div class="form-group">
-                <div class="col-sm-offset-4 col-sm-4">
+              <div class="form-group text-right">
+                <div class="col-sm-offset-4 col-sm-7">
                   <button type="submit" class="btn btn btn-primary">Change password</button>
                 </div>
               </div>
@@ -127,7 +127,7 @@
             </p>
             <br/>
             <p>
-              <a href="#" data-toggle="modal" data-target="#deleteAccountModal" class="btn btn-danger"><i class="fa fa-lg fa-fw fa-trash"></i> Delete this account</a>
+              <a href="#" data-toggle="modal" data-target="#deleteAccountModal" class="btn btn-danger"><i class="fa fa-lg fa-fw fa-trash"></i> Delete my account</a>
             </p>
           </div>
           
@@ -213,16 +213,17 @@
       </div>
       <div class="modal-body text-center">
         <br/>
-        <p>
-          <strong><i class="fa fa-lg fa-warning"></i> Warning</strong> If you delete your account, it cannot be restored.
+        <p class="lead text-danger">
+          <strong><i class="fa fa-lg fa-warning"></i> Warning</strong> Deleted accounts cannot be restored.
         </p>
         <br/>
       </div>
       <div class="modal-footer">
         <form name="delete-account" method="post" action="/account/delete">
           <input type="hidden" name="_csrf" value="<%= _csrf %>">
+          <a href="#" class="btn btn-default" data-dismiss="modal"><i class="fa fa-lg fa-fw fa-ban"></i> Cancel</a>
           <button type="submit" class="btn btn-danger"><i class="fa fa-fw fa-lg fa-trash"></i>Delete my account</button>
         </form>
       </div>
-    </div>        
+    </div>
 </div>
